@@ -20,14 +20,15 @@ package fr.insa.beuvron.utils.database;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Représente une entité de la base de donnée dans Java.
- * !!!! VERSION 2 : la version 1 avait un bug grave
- * 
+ * Représente une entité de la base de donnée dans Java. !!!! VERSION 2 : la
+ * version 1 avait un bug grave
+ *
  * <p>
  * permet de gérer les identificateurs créés automatiquement par le sgbd </p>
  * <p>
@@ -104,15 +105,28 @@ public abstract class ClasseMiroir implements Serializable {
     }
 
     /**
-     * chaque classe miroir spécifique doit fournir cette méthode qui sauvegarde
-     * tous les attributs dans la base de donnée sauf l'identificateur. Elle
-     * renvoie le Statement qui a servi à la création pour pouvoir récupérer
-     * l'identificateur généré.
-     *
+     * chaque classe miroir spécifique doit fournir cette méthode qui renvoie un
+     * statement permettant, s'il est exécuté, de créer un nouvel objet (une
+     * nouvelle ligne dans la table).
+     * Important : noubliez pas de créer le PreparedStatement avec l'option
+     * PreparedStatement.RETURN_GENERATED_KEYS
+     * Exemple (dans la classe Joueur) : 
+     * <pre> {@code 
+    @Override
+    protected PreparedStatement saveSansId(Connection con) throws SQLException {
+        PreparedStatement insert = con.prepareStatement(
+                "insert into joueur (surnom,pass,idrole) values (?,?,?)",
+                PreparedStatement.RETURN_GENERATED_KEYS);
+        insert.setString(1, this.getSurnom());
+        insert.setString(2, this.getPass());
+        insert.setInt(3, this.getIdRole());
+        return insert;        
+    }
+     * } </pre>
      * @param con
      * @return
      */
-    protected abstract Statement saveSansId(Connection con) throws SQLException;
+    protected abstract PreparedStatement saveSansId(Connection con) throws SQLException;
 
     /**
      * Sauvegarde une nouvelle entité et retourne la clé affecté automatiquement
@@ -120,27 +134,23 @@ public abstract class ClasseMiroir implements Serializable {
      * <p>
      * la clé est également sauvegardée dans l'attribut id de la DatabaseEntity
      * </p>
-     * <p>
-     * cette methode est déclaré "final", elle ne peut donc pas être spécialisée
-     * dans les sous-classes. En effet, elle ne s'occupe que de la gestion des
-     * identificateurs. La sauvegarde effective doit être spécifiée dans les
-     * sous-classes à l'aide de la méthode saveSansId
-     * </p>
      *
      * @param con
      * @return la clé de la nouvelle entité dans la table de la BdD
      * @throws EntiteDejaSauvegardee si l'id de l'entité est différent de -1
      * @throws SQLException si autre problème avec la BdD
      */
-    public final int saveInDB(Connection con) throws SQLException {
+    public int saveInDB(Connection con) throws SQLException {
         if (this.id != -1) {
             throw new EntiteDejaSauvegardee();
         }
-        Statement saveAllButId = this.saveSansId(con);
-        try (ResultSet rid = saveAllButId.getGeneratedKeys()) {
-            rid.next();
-            this.id = rid.getInt(1);
-            return this.id;
+        try (PreparedStatement saveAllButId = this.saveSansId(con)) {
+            saveAllButId.executeUpdate();
+            try (ResultSet rid = saveAllButId.getGeneratedKeys()) {
+                rid.next();
+                this.id = rid.getInt(1);
+                return this.id;
+            }
         }
     }
 
@@ -159,6 +169,5 @@ public abstract class ClasseMiroir implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-
 
 }

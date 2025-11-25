@@ -16,15 +16,26 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.insa.toto.model;
+package fr.insa.beuvron.vaadin.projets.tournoi.webui.session;
+
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.MainLayout;
 
 /**
  *
  * @author francois
  */
-public class ReadMe {
-    public static void main(String[] args) {
-        System.out.println("TODO voir sujet M3 TD3");
+@Route(value = "erreurs/noLogin",layout = MainLayout.class)
+@PageTitle("Likes")
+public class UtilisateurNonConnecte extends VerticalLayout{
+    
+    public UtilisateurNonConnecte() {
+        H2 message = new H2("Vous devez être connecté pour accéder à cette page");
+        message.getStyle().set("color", "red");
+        this.add(message);
     }
     
 }

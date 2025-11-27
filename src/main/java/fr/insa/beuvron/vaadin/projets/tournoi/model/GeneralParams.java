@@ -37,6 +37,24 @@ public class GeneralParams {
             return res.getInt(1);
         }
     }
+    
+    public static String widthOfPhotoInJoueurList(Connection con) throws SQLException{
+        try (PreparedStatement pst = con.prepareStatement(
+                "select widthofphotoinjoueurlist from generalparams")) {
+            ResultSet res = pst.executeQuery();
+            res.next();
+            return res.getString(1);
+        }
+    }
+            
+    public static String heightOfPhotoInJoueurList(Connection con) throws SQLException{
+        try (PreparedStatement pst = con.prepareStatement(
+                "select heightofphotoinjoueurlist from generalparams")) {
+            ResultSet res = pst.executeQuery();
+            res.next();
+            return res.getString(1);
+        }
+    }
             
     
 }

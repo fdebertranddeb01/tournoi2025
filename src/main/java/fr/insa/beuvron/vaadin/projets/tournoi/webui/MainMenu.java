@@ -20,6 +20,8 @@ package fr.insa.beuvron.vaadin.projets.tournoi.webui;
 
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.tests.TestIntegerTextField;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.tests.TestSmallImageLoader;
 
 /**
  *
@@ -29,6 +31,12 @@ public class MainMenu extends SideNav{
     
     public MainMenu() {
         SideNavItem accueil = new SideNavItem("accueil",VuePrincipale.class);
+        SideNavItem tests = new SideNavItem("tests");
+        SideNavItem testupload = new SideNavItem("upload image",TestSmallImageLoader.class);
+        SideNavItem testIField = new SideNavItem("Integer field",TestIntegerTextField.class);
+        tests.addItem(testupload,testIField);
+        this.addItem(accueil,tests);
+        
     }
     
 }

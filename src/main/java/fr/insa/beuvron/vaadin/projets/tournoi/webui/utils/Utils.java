@@ -16,23 +16,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.insa.beuvron.vaadin.projets.tournoi.webui;
+package fr.insa.beuvron.vaadin.projets.tournoi.webui.utils;
 
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.component.notification.Notification;
 
 /**
  *
- * @author francois
+ * @author fdebertranddeb01
  */
-@Route(value = "",layout = MainLayout.class)
-@PageTitle("Tournois")
-public class VuePrincipale extends VerticalLayout {
+public class Utils {
     
-    public VuePrincipale() {
-        this.add(new H2("TODO2: vue principale du projet tournoi"));
+    public static void outErrorAsNotification(String errMessage) {
+        Notification.show(errMessage, 5000, Notification.Position.MIDDLE);
     }
-
+    
 }

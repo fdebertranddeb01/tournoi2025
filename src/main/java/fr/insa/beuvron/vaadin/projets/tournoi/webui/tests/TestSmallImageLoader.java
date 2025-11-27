@@ -1,0 +1,76 @@
+/*
+Copyright 2000- Francois de Bertrand de Beuvron
+
+This file is part of CoursBeuvron.
+
+CoursBeuvron is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CoursBeuvron is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package fr.insa.beuvron.vaadin.projets.tournoi.webui.tests;
+
+import java.util.Base64;
+
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.router.Route;
+
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.MainLayout;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.SmallImageWithUploader;
+
+/**
+ *
+ * @author fdebertranddeb01
+ */
+@Route(value = "tests/loadImage", layout = MainLayout.class)
+public class TestSmallImageLoader extends VerticalLayout {
+
+    private TextArea outputArea;
+    private SmallImageWithUploader imgUploader;
+
+    public TestSmallImageLoader() {
+        this.add(new H2("Test de l'upload d'image"));
+        this.imgUploader = new SmallImageWithUploader(100000, "200px", "300px");
+        this.add(this.imgUploader);
+        this.add(new Button("to Base64", (t) -> {
+            byte[] imgData = this.imgUploader.getUploader().getImageData();
+            if (imgData != null) {
+                String base64 = Base64.getEncoder().encodeToString(imgData);
+                this.outputArea.setValue(coupeStringPourJava(base64, 80));
+            } else {
+                this.outputArea.setValue("no image loaded");
+            }
+        }));
+        this.outputArea = new TextArea("Output");
+        this.outputArea.setWidthFull();
+        this.outputArea.setHeight("20em");
+        this.add(this.outputArea);
+
+    }
+
+    public static String coupeStringPourJava(String s, int maxLen) {
+        StringBuilder sb = new StringBuilder();
+        int index = 0;
+        while (index < s.length()) {
+            int endIndex = Math.min(index + maxLen, s.length());
+            sb.append("\"").append(s, index, endIndex).append("\"");
+            if (endIndex < s.length()) {
+                sb.append(" +\n");
+            }
+            index = endIndex;
+        }
+        return sb.toString();
+    }
+
+}

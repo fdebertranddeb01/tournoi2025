@@ -22,15 +22,26 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
+import fr.insa.beuvron.utils.database.ConnectionPool;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.session.LoginEntete;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.session.LogoutEntete;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.session.SessionInfo;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.Utils;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author francois
  */
 public class MainLayout extends AppLayout implements AfterNavigationObserver {
+
+    // en mode debug, il est utile de se logger automatiquement comme admin
+    // pour tester toutes les fonctionnalités
+    // à mettre évidement à false quand debug fini
+    public static final boolean AUTO_LOG_AS_ADMIN = true;
 
     private LoginEntete curLogin;
     private LogoutEntete curLogout;
@@ -42,6 +53,16 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         if (SessionInfo.userConnected()) {
             this.curLogout = new LogoutEntete();
             this.addToNavbar(this.curLogout);
+        } else if (AUTO_LOG_AS_ADMIN) {
+            try (Connection con = ConnectionPool.getConnection()) {
+                SessionInfo.tryLogin(con, "admin", "admin");
+                this.curLogout = new LogoutEntete();
+                this.addToNavbar(this.curLogout);
+            } catch (SQLException ex) {
+                Utils.outErrorAsNotification("Problème interne : " + ex.getLocalizedMessage());
+                this.curLogin = new LoginEntete();
+                this.addToNavbar(this.curLogin);
+            }
         } else {
             this.curLogin = new LoginEntete();
             this.addToNavbar(this.curLogin);

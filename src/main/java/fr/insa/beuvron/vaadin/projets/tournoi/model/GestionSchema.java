@@ -19,6 +19,7 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.beuvron.vaadin.projets.tournoi.model;
 
 import fr.insa.beuvron.utils.database.ConnectionSimpleSGBD;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -43,7 +44,12 @@ public class GestionSchema {
             try (Statement st = con.createStatement()) {
                 // creation des tables
                 st.executeUpdate("create table generalparams ( "
-                        + "maxsizephotoinko integer not null"
+                        + "maxsizephotoinko integer not null,"
+                        // la taille des vignettes des photos des joueurs
+                        // quand is sont dans une liste
+                        // la chaîne de caractère doit être une mesure css valide
+                        + "widthofphotoinjoueurlist varchar(20) not null,"
+                        + "heightofphotoinjoueurlist varchar(20) not null"
                         + ") "
                 );
                 st.executeUpdate("create table role ( "
@@ -58,7 +64,9 @@ public class GestionSchema {
                         + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id") + ","
                         + " surnom varchar(30) not null unique,"
                         + " pass varchar(20) not null,"
-                        + " idrole integer not null "
+                        + " idrole integer not null,"
+                        + " photo blob,"
+                        + " phototype varchar(20)"
                         + ") "
                 );
                 st.executeUpdate("alter table joueur\n"
@@ -105,8 +113,13 @@ public class GestionSchema {
 
     public static void createBdDVide(Connection con) throws SQLException {
         try (PreparedStatement pst = con.prepareStatement(
-                "insert into generalparams (maxsizephotoinko) values (?)")) {
-            pst.setInt(1, 5*1024);
+                "insert into generalparams ("
+                        + "maxsizephotoinko,"
+                        + "widthofphotoinjoueurlist,"
+                        + "heightofphotoinjoueurlist) values (?,?,?)")) {
+            pst.setInt(1, 1024);
+            pst.setString(2,"4em");
+            pst.setString(3,"6em");
             pst.executeUpdate();
         }
         List<Role> roles = List.of(
@@ -116,6 +129,14 @@ public class GestionSchema {
         );
         for (var r : roles) {
             r.saveInDB(con);
+        }
+        List<Joueur> joueurs = List.of(
+                new Joueur("admin", "admin", 1,
+                DefaultPhoto.getPhotoBytes(DefaultPhoto.PETIT_SMILEY_CONTENT_BASE64_PNG),
+                DefaultPhoto.PNG_TYPE)
+        );
+        for (var u : joueurs) {
+            u.saveInDB(con);
         }
     }
 

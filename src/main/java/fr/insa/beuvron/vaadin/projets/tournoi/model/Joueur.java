@@ -26,7 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Une petite classe "miroir" de la table des joueurs.
+ * Une petite classe "miroir" de la table des joueurs. 
  * @author fdebertranddeb01
  */
 public class Joueur extends ClasseMiroir{

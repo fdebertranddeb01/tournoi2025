@@ -32,9 +32,9 @@ public class BdDTest {
     
     public static void createBdDTest(Connection con) throws SQLException {
         List<Joueur> users = List.of(
-                new Joueur("toto", "p1", 1),
-                new Joueur("titi", "p2", 2),
-                new Joueur("tutu", "p3", 3)
+                new Joueur("toto", "p1", 1,null,null),
+                new Joueur("titi", "p2", 2, null,null),
+                new Joueur("tutu", "p3", 3,null,null)
         );
         for (var u : users) {
             u.saveInDB(con);

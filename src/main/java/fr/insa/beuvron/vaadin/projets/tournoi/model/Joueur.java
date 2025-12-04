@@ -64,21 +64,21 @@ public class Joueur extends ClasseMiroir{
     }
 
     /** retrouve un joueur avec son identificateur */
-    public static Joueur getById(Connection con,int idJoueur) throws SQLException {
-        try (PreparedStatement req = con.prepareStatement(
-                "select surnom, pass, idrole from joueur where id=?");
-        req.setInt(1, idJoueur);
-        return ClasseMiroir.getOneFromPreparedRequest(
-                req,
-                (rs) -> new Joueur(
-                        rs.getString("surnom"),
-                        rs.getString("pass"),
-                        rs.getInt("idrole"),
-                        null,
-                        null
-                )
-        );
-    }
+    // public static Joueur getById(Connection con,int idJoueur) throws SQLException {
+    //     try (PreparedStatement req = con.prepareStatement(
+    //             "select surnom, pass, idrole from joueur where id=?");
+    //     req.setInt(1, idJoueur);
+    //     return ClasseMiroir.getOneFromPreparedRequest(
+    //             req,
+    //             (rs) -> new Joueur(
+    //                     rs.getString("surnom"),
+    //                     rs.getString("pass"),
+    //                     rs.getInt("idrole"),
+    //                     null,
+    //                     null
+    //             )
+    //     );
+    // }
 
 
     /**

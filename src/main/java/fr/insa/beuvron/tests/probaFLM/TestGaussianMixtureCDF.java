@@ -69,7 +69,7 @@ public class TestGaussianMixtureCDF {
         }
         System.out.println(new double[1].getClass().getSimpleName());
         System.out.println(new double[1].getClass().getCanonicalName());
-        String s = "hello";
+        String s = "hello2";
         
     }
 }

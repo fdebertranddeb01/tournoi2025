@@ -21,13 +21,11 @@ package fr.insa.beuvron.vaadin.projets.tournoi.webui.utils;
 import com.vaadin.flow.component.notification.Notification;
 
 /**
- *
  * @author fdebertranddeb01
  */
 public class Utils {
-    
-    public static void outErrorAsNotification(String errMessage) {
-        Notification.show(errMessage, 5000, Notification.Position.MIDDLE);
-    }
-    
+
+  public static void outErrorAsNotification(String errMessage) {
+    Notification.show(errMessage, 5000, Notification.Position.MIDDLE);
+  }
 }

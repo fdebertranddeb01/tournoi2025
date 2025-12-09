@@ -18,59 +18,57 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
 package fr.insa.beuvron.vaadin.projets.tournoi.webui.tests;
 
-import java.util.Base64;
-
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.Route;
-
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.MainLayout;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.SmallImageWithUploader;
+import java.util.Base64;
 
 /**
- *
  * @author fdebertranddeb01
  */
 @Route(value = "tests/loadImage", layout = MainLayout.class)
 public class TestSmallImageLoader extends VerticalLayout {
 
-    private TextArea outputArea;
-    private SmallImageWithUploader imgUploader;
+  private TextArea outputArea;
+  private SmallImageWithUploader imgUploader;
 
-    public TestSmallImageLoader() {
-        this.add(new H2("Test de l'upload d'image"));
-        this.imgUploader = new SmallImageWithUploader(100000, "200px", "300px");
-        this.add(this.imgUploader);
-        this.add(new Button("to Base64", (t) -> {
-            byte[] imgData = this.imgUploader.getUploader().getImageData();
-            if (imgData != null) {
+  public TestSmallImageLoader() {
+    this.add(new H2("Test de l'upload d'image"));
+    this.imgUploader = new SmallImageWithUploader(50000, "200px", "300px");
+    this.add(this.imgUploader);
+    this.add(
+        new Button(
+            "to Base64",
+            (t) -> {
+              byte[] imgData = this.imgUploader.getUploader().getImageData();
+              if (imgData != null) {
                 String base64 = Base64.getEncoder().encodeToString(imgData);
                 this.outputArea.setValue(coupeStringPourJava(base64, 80));
-            } else {
+              } else {
                 this.outputArea.setValue("no image loaded");
-            }
-        }));
-        this.outputArea = new TextArea("Output");
-        this.outputArea.setWidthFull();
-        this.outputArea.setHeight("20em");
-        this.add(this.outputArea);
+              }
+            }));
+    this.outputArea = new TextArea("Output");
+    this.outputArea.setWidthFull();
+    this.outputArea.setHeight("20em");
+    this.add(this.outputArea);
+  }
 
+  public static String coupeStringPourJava(String s, int maxLen) {
+    StringBuilder sb = new StringBuilder();
+    int index = 0;
+    while (index < s.length()) {
+      int endIndex = Math.min(index + maxLen, s.length());
+      sb.append("\"").append(s, index, endIndex).append("\"");
+      if (endIndex < s.length()) {
+        sb.append(" +\n");
+      }
+      index = endIndex;
     }
-
-    public static String coupeStringPourJava(String s, int maxLen) {
-        StringBuilder sb = new StringBuilder();
-        int index = 0;
-        while (index < s.length()) {
-            int endIndex = Math.min(index + maxLen, s.length());
-            sb.append("\"").append(s, index, endIndex).append("\"");
-            if (endIndex < s.length()) {
-                sb.append(" +\n");
-            }
-            index = endIndex;
-        }
-        return sb.toString();
-    }
-
+    return sb.toString();
+  }
 }

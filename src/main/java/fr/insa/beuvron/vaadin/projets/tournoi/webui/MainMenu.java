@@ -24,19 +24,16 @@ import fr.insa.beuvron.vaadin.projets.tournoi.webui.tests.TestIntegerTextField;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.tests.TestSmallImageLoader;
 
 /**
- *
  * @author francois
  */
-public class MainMenu extends SideNav{
-    
-    public MainMenu() {
-        SideNavItem accueil = new SideNavItem("accueil",VuePrincipale.class);
-        SideNavItem tests = new SideNavItem("tests");
-        SideNavItem testupload = new SideNavItem("upload image",TestSmallImageLoader.class);
-        SideNavItem testIField = new SideNavItem("Integer field",TestIntegerTextField.class);
-        tests.addItem(testupload,testIField);
-        this.addItem(accueil,tests);
-        
-    }
-    
+public class MainMenu extends SideNav {
+
+  public MainMenu() {
+    SideNavItem accueil = new SideNavItem("accueil", VuePrincipale.class);
+    SideNavItem tests = new SideNavItem("tests");
+    SideNavItem testupload = new SideNavItem("upload image", TestSmallImageLoader.class);
+    SideNavItem testIField = new SideNavItem("Integer field", TestIntegerTextField.class);
+    tests.addItem(testupload, testIField);
+    this.addItem(accueil, tests);
+  }
 }

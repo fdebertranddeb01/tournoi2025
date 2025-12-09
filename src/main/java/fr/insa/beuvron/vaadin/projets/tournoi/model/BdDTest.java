@@ -20,36 +20,33 @@ package fr.insa.beuvron.vaadin.projets.tournoi.model;
 
 import fr.insa.beuvron.utils.database.ConnectionSimpleSGBD;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
 /**
- *
  * @author francois
  */
 public class BdDTest {
-    
-    public static void createBdDTest(Connection con) throws SQLException {
-        List<Joueur> users = List.of(
-                new Joueur("toto", "p1", 1,null,null),
-                new Joueur("titi", "p2", 2, null,null),
-                new Joueur("tutu", "p3", 3,null,null)
-        );
-        for (var u : users) {
-            u.saveInDB(con);
-        }
-    }
 
-    public static void main(String[] args) {
-        try (Connection con = ConnectionSimpleSGBD.defaultCon()) {
-            GestionSchema.razBdd(con);
-            System.out.println("RAZ BdD : OK");
-            createBdDTest(con);
-            System.out.println("Création BdD test : OK");
-        } catch (SQLException ex) {
-            throw new Error(ex);
-        }
+  public static void createBdDTest(Connection con) throws SQLException {
+    List<Joueur> users =
+        List.of(
+            new Joueur("toto", "p1", 1, null, null),
+            new Joueur("titi", "p2", 2, null, null),
+            new Joueur("tutu", "p3", 3, null, null));
+    for (var u : users) {
+      u.saveInDB(con);
     }
+  }
 
+  public static void main(String[] args) {
+    try (Connection con = ConnectionSimpleSGBD.defaultCon()) {
+      GestionSchema.razBdd(con);
+      System.out.println("RAZ BdD : OK");
+      createBdDTest(con);
+      System.out.println("Création BdD test : OK");
+    } catch (SQLException ex) {
+      throw new Error(ex);
+    }
+  }
 }

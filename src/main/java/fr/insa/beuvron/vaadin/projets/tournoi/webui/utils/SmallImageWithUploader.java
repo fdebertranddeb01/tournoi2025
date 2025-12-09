@@ -18,53 +18,60 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
 package fr.insa.beuvron.vaadin.projets.tournoi.webui.utils;
 
+import java.util.Optional;
+
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import java.util.Base64;
-
 /**
- *
  * @author fdebertranddeb01
  */
 public class SmallImageWithUploader extends HorizontalLayout {
 
-    private SmallImageUploader uploader;
-    private Div imagePlace;
+  private SmallImageUploader uploader;
+  private Div imagePlace;
 
-    public SmallImageWithUploader(int maxFileSize, String imgWidth, String imgHeight) {
-        this.imagePlace = new Div();
-        this.imagePlace.setMaxWidth(imgWidth);
-        this.imagePlace.setMaxHeight(imgWidth);
-        this.imagePlace.setMinWidth(imgWidth);
-        this.imagePlace.setMinHeight(imgWidth);
-        this.uploader = new SmallImageUploader(maxFileSize);
-        this.uploader.addAllFinishedListener((t) -> {
-            this.changeImage();
+  private SmallImage curImage;
+
+  public SmallImageWithUploader(int maxFileSize, String imgWidth, String imgHeight) {
+    this.imagePlace = new Div();
+    this.imagePlace.getStyle().set("border", "1px solid black");
+    this.imagePlace.setMaxWidth(imgWidth);
+    this.imagePlace.setMaxHeight(imgHeight);
+    this.imagePlace.setMinWidth(imgWidth);
+    this.imagePlace.setMinHeight(imgHeight);
+    this.uploader = new SmallImageUploader(maxFileSize);
+    this.uploader.addAllFinishedListener(
+        (t) -> {
+          this.changeImage();
         });
-        this.imagePlace.add(VaadinIcon.BAN.create());
-        this.add(this.imagePlace, this.uploader);
-    }
+    this.imagePlace.add(VaadinIcon.BAN.create());
+    this.add(this.imagePlace, this.uploader);
+  }
 
-    public void changeImage() {
-        this.imagePlace.removeAll();
-        byte[] imgData = this.uploader.getImageData();
-        if (imgData == null) {
-            this.imagePlace.add(VaadinIcon.BAN.create());
-        } else {
-            String dataURI = "data:" + this.uploader.getImageType() +
-                    ";base64," + Base64.getEncoder().encodeToString(imgData);
-            Image img = new Image(dataURI, "Problème image");
-            img.setWidthFull();
-            img.setHeightFull();
-            img.getStyle().set("object-fit","contain");
-            this.imagePlace.add(img);
-        }
+  public void changeImage() {
+    this.imagePlace.removeAll();
+    byte[] imgData = this.uploader.getImageData();
+    if (imgData == null) {
+      Icon icon = VaadinIcon.BAN.create();
+      icon.setSize("2cm");
+      this.imagePlace.add();
+      this.curImage = null;
+    } else {
+      this.curImage = new SmallImage(imgData, this.uploader.getImageType());
+      Image img = this.curImage.toVaadinImage("Problem loading image");
+      this.imagePlace.add(img);
     }
+  }
 
- 
-    public SmallImageUploader getUploader() {
-        return this.uploader;
-    }
+  public SmallImageUploader getUploader() {
+    return this.uploader;
+  }
+
+  public Optional<SmallImage> getCurrentImage() {
+    return Optional.ofNullable(this.curImage);
+  }
+
 }

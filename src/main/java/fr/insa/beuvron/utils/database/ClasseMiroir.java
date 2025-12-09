@@ -23,151 +23,140 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
- * Représente une entité de la base de donnée dans Java. !!!! VERSION 2 : la
- * version 1 avait un bug grave
+ * Représente une entité de la base de donnée dans Java. !!!! VERSION 2 : la version 1 avait un bug
+ * grave
+ *
+ * <p>permet de gérer les identificateurs créés automatiquement par le sgbd
+ *
+ * <p>Une ClasseMiroir e est crée avec un id égal à -1; cela signifie que l'objet java n'a pour
+ * l'instant pas été sauvegardé dans la base de donnée.
  *
  * <p>
- * permet de gérer les identificateurs créés automatiquement par le sgbd </p>
- * <p>
- * Une ClasseMiroir e est crée avec un id égal à -1; cela signifie que l'objet
- * java n'a pour l'instant pas été sauvegardé dans la base de donnée.
- * <p>
- * <p>
- * la sauvegarde dans la base de donnée se fait grace à la méthode saveInDb qui
- * a deux étapes :
+ *
+ * <p>la sauvegarde dans la base de donnée se fait grace à la méthode saveInDb qui a deux étapes :
+ *
  * <ul>
- * <li> une étape spécifique à chaque sous-classe qui définie toutes les
- * colonnes sauf l'ID : methode saveSansId</li>
- * <li> cette methode saveSansId renvoit le Statement qui lui a permit de créer
- * l'objet</li>
- * <li> la méthode saveInDb reprend ce Statement pour retrouver l'ID créé
- * automatiquement</li>
+ *   <li>une étape spécifique à chaque sous-classe qui définie toutes les colonnes sauf l'ID :
+ *       methode saveSansId
+ *   <li>cette methode saveSansId renvoit le Statement qui lui a permit de créer l'objet
+ *   <li>la méthode saveInDb reprend ce Statement pour retrouver l'ID créé automatiquement
  * </ul>
- * </p>
- * <p>
- * Cette classe abstraite peut servir de base aux différentes classes
- * représentant effectivement des tables d'entités dans la BdD.</p>
- * <p>
- * ATTENTION : lz PreparedStatement utilisé dans saveSansId devra être créé avec
- * l'option PreparedStatement.RETURN_GENERATED_KEYS
- * </p>
- * <p>
- * pour la gestion de l'égalité/identité, nous sommes stricts : si les objets ne
- * sont pas dans la base de donnée (id = -1) il sont incomparables. Un test
- * d'égalité est une erreur.
- * </p>
- * <p>
- * en cohérence, le hashcode d'un objet est simplement sont id. si son id est -1
- * c'est une errue
- * </p>
+ *
+ * <p>Cette classe abstraite peut servir de base aux différentes classes représentant effectivement
+ * des tables d'entités dans la BdD.
+ *
+ * <p>ATTENTION : lz PreparedStatement utilisé dans saveSansId devra être créé avec l'option
+ * PreparedStatement.RETURN_GENERATED_KEYS
+ *
+ * <p>pour la gestion de l'égalité/identité, nous sommes stricts : si les objets ne sont pas dans la
+ * base de donnée (id = -1) il sont incomparables. Un test d'égalité est une erreur.
+ *
+ * <p>en cohérence, le hashcode d'un objet est simplement sont id. si son id est -1 c'est une errue
  *
  * @author francois
  */
 public abstract class ClasseMiroir implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private int id;
+  private int id;
 
-    /**
-     * Constructeur typiquement utilisé lorsque l'on a retrouvé une entité déjà
-     * existante dans la base de donnée.
-     *
-     * @param id
-     */
-    public ClasseMiroir(int id) {
-        this.id = id;
+  /**
+   * Constructeur typiquement utilisé lorsque l'on a retrouvé une entité déjà existante dans la base
+   * de donnée.
+   *
+   * @param id
+   */
+  public ClasseMiroir(int id) {
+    this.id = id;
+  }
+
+  /**
+   * Constructeur typiquement utilisé lorsque l'on crée une nouvelle entité en mémoire avant de la
+   * sauvegarder dans la base de donnée.
+   */
+  public ClasseMiroir() {
+    this(-1);
+  }
+
+  public static class EntiteDejaSauvegardee extends SQLException {
+
+    public EntiteDejaSauvegardee() {
+      super("L'entité à déjà été sauvegardée (id != -1");
     }
+  }
 
-    /**
-     * Constructeur typiquement utilisé lorsque l'on crée une nouvelle entité en
-     * mémoire avant de la sauvegarder dans la base de donnée.
-     */
-    public ClasseMiroir() {
-        this(-1);
+  public static class EntiteNonSauvegardee extends Error {
+
+    public EntiteNonSauvegardee() {
+      super(
+          "Une entité non sauvegardée ; pas de test d'égalité ; impossible à supprimer dans la BdD");
     }
+  }
 
-    public static class EntiteDejaSauvegardee extends SQLException {
+  /**
+   * chaque classe miroir spécifique doit fournir cette méthode qui renvoie un statement permettant,
+   * s'il est exécuté, de créer un nouvel objet (une nouvelle ligne dans la table). Important :
+   * noubliez pas de créer le PreparedStatement avec l'option
+   * PreparedStatement.RETURN_GENERATED_KEYS Exemple (dans la classe Joueur) :
+   *
+   * <pre>{@code
+   * @Override
+   * protected PreparedStatement saveSansId(Connection con) throws SQLException {
+   * PreparedStatement insert = con.prepareStatement(
+   * "insert into joueur (surnom,pass,idrole) values (?,?,?)",
+   * PreparedStatement.RETURN_GENERATED_KEYS);
+   * insert.setString(1, this.getSurnom());
+   * insert.setString(2, this.getPass());
+   * insert.setInt(3, this.getIdRole());
+   * return insert;
+   * }
+   * }</pre>
+   *
+   * @param con
+   * @return
+   */
+  protected abstract PreparedStatement saveSansId(Connection con) throws SQLException;
 
-        public EntiteDejaSauvegardee() {
-            super("L'entité à déjà été sauvegardée (id != -1");
-        }
+  /**
+   * Sauvegarde une nouvelle entité et retourne la clé affecté automatiquement par le SGBD.
+   *
+   * <p>la clé est également sauvegardée dans l'attribut id de la DatabaseEntity
+   *
+   * @param con
+   * @return la clé de la nouvelle entité dans la table de la BdD
+   * @throws EntiteDejaSauvegardee si l'id de l'entité est différent de -1
+   * @throws SQLException si autre problème avec la BdD
+   */
+  public int saveInDB(Connection con) throws SQLException {
+    if (this.id != -1) {
+      throw new EntiteDejaSauvegardee();
     }
-
-    public static class EntiteNonSauvegardee extends Error {
-
-        public EntiteNonSauvegardee() {
-            super("Une entité non sauvegardée ; pas de test d'égalité ; impossible à supprimer dans la BdD");
-        }
+    try (PreparedStatement saveAllButId = this.saveSansId(con)) {
+      saveAllButId.executeUpdate();
+      try (ResultSet rid = saveAllButId.getGeneratedKeys()) {
+        rid.next();
+        this.id = rid.getInt(1);
+        return this.id;
+      }
     }
+  }
 
-    /**
-     * chaque classe miroir spécifique doit fournir cette méthode qui renvoie un
-     * statement permettant, s'il est exécuté, de créer un nouvel objet (une
-     * nouvelle ligne dans la table).
-     * Important : noubliez pas de créer le PreparedStatement avec l'option
-     * PreparedStatement.RETURN_GENERATED_KEYS
-     * Exemple (dans la classe Joueur) : 
-     * <pre> {@code 
-    @Override
-    protected PreparedStatement saveSansId(Connection con) throws SQLException {
-        PreparedStatement insert = con.prepareStatement(
-                "insert into joueur (surnom,pass,idrole) values (?,?,?)",
-                PreparedStatement.RETURN_GENERATED_KEYS);
-        insert.setString(1, this.getSurnom());
-        insert.setString(2, this.getPass());
-        insert.setInt(3, this.getIdRole());
-        return insert;        
-    }
-     * } </pre>
-     * @param con
-     * @return
-     */
-    protected abstract PreparedStatement saveSansId(Connection con) throws SQLException;
+  /**
+   * cette méthode doit être utilisée avec précaution pour signaler par exemple que l'on a supprimé
+   * l'entité de la base de donnée.
+   */
+  protected void entiteSupprimee() {
+    this.id = -1;
+  }
 
-    /**
-     * Sauvegarde une nouvelle entité et retourne la clé affecté automatiquement
-     * par le SGBD.
-     * <p>
-     * la clé est également sauvegardée dans l'attribut id de la DatabaseEntity
-     * </p>
-     *
-     * @param con
-     * @return la clé de la nouvelle entité dans la table de la BdD
-     * @throws EntiteDejaSauvegardee si l'id de l'entité est différent de -1
-     * @throws SQLException si autre problème avec la BdD
-     */
-    public int saveInDB(Connection con) throws SQLException {
-        if (this.id != -1) {
-            throw new EntiteDejaSauvegardee();
-        }
-        try (PreparedStatement saveAllButId = this.saveSansId(con)) {
-            saveAllButId.executeUpdate();
-            try (ResultSet rid = saveAllButId.getGeneratedKeys()) {
-                rid.next();
-                this.id = rid.getInt(1);
-                return this.id;
-            }
-        }
-    }
+  public int getId() {
+    return id;
+  }
 
-    /**
-     * cette méthode doit être utilisée avec précaution pour signaler par
-     * exemple que l'on a supprimé l'entité de la base de donnée.
-     */
-    protected void entiteSupprimee() {
-        this.id = -1;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
+  public void setId(int id) {
+    this.id = id;
+  }
 }

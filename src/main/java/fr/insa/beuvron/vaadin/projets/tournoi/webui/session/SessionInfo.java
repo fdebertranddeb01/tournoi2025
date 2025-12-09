@@ -26,8 +26,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
-import java.util.Set;
-
 /**
  * L'ensemble des informations associées à la session.
  * @author francois

@@ -25,17 +25,15 @@ import com.vaadin.flow.router.Route;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.MainLayout;
 
 /**
- *
  * @author francois
  */
-@Route(value = "erreurs/noLogin",layout = MainLayout.class)
+@Route(value = "erreurs/noLogin", layout = MainLayout.class)
 @PageTitle("Likes")
-public class UtilisateurNonConnecte extends VerticalLayout{
-    
-    public UtilisateurNonConnecte() {
-        H2 message = new H2("Vous devez être connecté pour accéder à cette page");
-        message.getStyle().set("color", "red");
-        this.add(message);
-    }
-    
+public class UtilisateurNonConnecte extends VerticalLayout {
+
+  public UtilisateurNonConnecte() {
+    H2 message = new H2("Vous devez être connecté pour accéder à cette page");
+    message.getStyle().set("color", "red");
+    this.add(message);
+  }
 }

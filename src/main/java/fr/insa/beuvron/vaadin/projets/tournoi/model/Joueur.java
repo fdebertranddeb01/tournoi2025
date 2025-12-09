@@ -19,7 +19,6 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.beuvron.vaadin.projets.tournoi.model;
 
 import fr.insa.beuvron.utils.database.ClasseMiroir;
-import fr.insa.beuvron.utils.database.ConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -53,7 +52,7 @@ public class Joueur extends ClasseMiroir{
     @Override
     protected PreparedStatement saveSansId(Connection con) throws SQLException {
         PreparedStatement insert = con.prepareStatement(
-                "insert into joueur (surnom,pass,idrole) values (?,?,?)",
+                "insert into joueur (surnom,pass,idrole,photo,phototype) values (?,?,?,?,?)",
                 PreparedStatement.RETURN_GENERATED_KEYS);
                 insert.setString(1, this.getSurnom());
                 insert.setString(2, this.getPass());

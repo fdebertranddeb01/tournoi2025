@@ -17,15 +17,16 @@ You should have received a copy of the GNU General Public License
 along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * définition d'une Grid vaadin générique permettant d'afficher tout ensemble
- * de donnée représenté par une liste de liste d'Object.
+ * définition d'une Grid vaadin générique permettant d'afficher tout ensemble de donnée représenté
+ * par une liste de liste d'Object.
+ *
  * <pre>
  * <p> vaadin propose un grand nombre de classes pour définir des sources
  * de données associées aux tables. Elle permettent par exemple de ne charger
  * que les données actuellement affichées, de filtrer ...
  * </p>
  * <p> Malheuresusement, ces classes sont plutôt adaptées à des sources de
- * données Spring ou JPA, et pas vraiment prévues pour des sources plus 
+ * données Spring ou JPA, et pas vraiment prévues pour des sources plus
  * "basiques" comme celles retrouvées en utilisant jdbc.
  * </p>
  * <p> Dans ce package, une ligne de donnée est simplement une {@code List<Object>}

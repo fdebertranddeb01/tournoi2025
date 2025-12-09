@@ -22,28 +22,22 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.SmallImageWithUploader;
 
 /**
- *
  * @author fdebertranddeb01
  */
-public class InscriptionForm extends FormLayout{
-    
-    private TextField tfSurnom;
-    private PasswordField pfPass;
-    private PasswordField pfAgain;
-    private SmallImageWithUploader imgUploader;
-    private Button btnSubmit;
-    
-    public InscriptionForm() {
-        this.tfSurnom = new TextField("surnom");
-        this.pfPass = new PasswordField("pass : ");
-        this.pfAgain = new PasswordField("pass (confirm) : ");
-        
-        
+public class InscriptionForm extends FormLayout {
 
-    }
-    
+  private TextField tfSurnom;
+  private PasswordField pfPass;
+  private PasswordField pfAgain;
+  private SmallImageWithUploader imgUploader;
+  private Button btnSubmit;
+
+  public InscriptionForm() {
+    this.tfSurnom = new TextField("surnom");
+    this.pfPass = new PasswordField("pass : ");
+    this.pfAgain = new PasswordField("pass (confirm) : ");
+  }
 }

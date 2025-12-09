@@ -22,28 +22,28 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 
 /**
- * On utilise la possibilité de fournir une méthode par défaut à cette interface
- * pour rediriger vers une page d'erreur si l'utilisateur accède directement
- * (par son url) à une page à laquelle il n'a pas droit.
- * <p>
- * Utilisation typique : 
- * <pre> {@code 
+ * On utilise la possibilité de fournir une méthode par défaut à cette interface pour rediriger vers
+ * une page d'erreur si l'utilisateur accède directement (par son url) à une page à laquelle il n'a
+ * pas droit.
+ *
+ * <p>Utilisation typique :
+ *
+ * <pre>{@code
  * @Route(value = "uneUrl",layout = MainLayout.class)
- * public class UnePageReserveeAuxUtilisateursConnectes extends VerticalLayout implements OnlyConnected 
+ * public class UnePageReserveeAuxUtilisateursConnectes extends VerticalLayout implements OnlyConnected
  * ...
- * } </pre>
- * </p>
+ * }</pre>
+ *
  * @author francois
  */
 public interface OnlyConnected extends BeforeEnterObserver {
-    
-    @Override
-    default public void beforeEnter(BeforeEnterEvent event) {
-//        Notification.show("user test : " + (SessionInfo.curUser().isPresent() ? SessionInfo.curUser().get().getSurnom() : "not connected" ));
-        if (! SessionInfo.userConnected()) {
-            event.rerouteTo(UtilisateurNonConnecte.class);
-        }
-        
+
+  @Override
+  public default void beforeEnter(BeforeEnterEvent event) {
+    //        Notification.show("user test : " + (SessionInfo.curUser().isPresent() ?
+    // SessionInfo.curUser().get().getSurnom() : "not connected" ));
+    if (!SessionInfo.userConnected()) {
+      event.rerouteTo(UtilisateurNonConnecte.class);
     }
-    
+  }
 }

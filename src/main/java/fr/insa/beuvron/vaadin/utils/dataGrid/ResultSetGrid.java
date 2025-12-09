@@ -25,54 +25,58 @@ import java.sql.SQLException;
 
 /**
  * Permet facilement de visualier n'importe quel ResultSet dans une Grid vaadin.
+ *
  * <pre>
  * On fourni le PreparedStatement plutôt que directement le ResultSet : cela
  * permet si besoin de rafraichir la Grid en ré-évaluant le PreparedStatement.
  * </pre>
+ *
  * @author francois
  */
 public class ResultSetGrid extends DataGrid {
 
-    private PreparedStatement pst;
-    
-    /**
-     * crée une Grid avec toutes les colonnes du ResultSet, et les noms de colonnes
-     * comme entêtes.
-     * <pre>
-     * Si vous voulez de jolies Grid, utilisez plutôt le constructeur avec
-     * une GridDescription, qui vous permet de préciser les colonnes et leur
-     * forme.
-     * </pre>
-     * @param pst
-     * @throws SQLException 
-     */
-    public ResultSetGrid(PreparedStatement pst) throws SQLException {
-        super(executeStatement(pst));
-        this.pst = pst;
-    }
+  private PreparedStatement pst;
 
-    /**
-     * crée une Grid à partir d'un ResultSet, en précisant dans la GridDescription
-     * les colonnes à afficher, et leur mise en forme.
-     * @param pst
-     * @param gridDes
-     * @throws SQLException 
-     */
-    public ResultSetGrid(PreparedStatement pst, GridDescription gridDes) throws SQLException {
-        super(gridDes);
-        this.pst = pst;
-        this.update();
-    }
+  /**
+   * crée une Grid avec toutes les colonnes du ResultSet, et les noms de colonnes comme entêtes.
+   *
+   * <pre>
+   * Si vous voulez de jolies Grid, utilisez plutôt le constructeur avec
+   * une GridDescription, qui vous permet de préciser les colonnes et leur
+   * forme.
+   * </pre>
+   *
+   * @param pst
+   * @throws SQLException
+   */
+  public ResultSetGrid(PreparedStatement pst) throws SQLException {
+    super(executeStatement(pst));
+    this.pst = pst;
+  }
 
-    private static ResultSetUtils.ResultSetAsLists executeStatement(PreparedStatement pst) throws SQLException {
-        try (ResultSet res = pst.executeQuery()) {
-            return ResultSetUtils.toLists(res);
-        }
-    }
+  /**
+   * crée une Grid à partir d'un ResultSet, en précisant dans la GridDescription les colonnes à
+   * afficher, et leur mise en forme.
+   *
+   * @param pst
+   * @param gridDes
+   * @throws SQLException
+   */
+  public ResultSetGrid(PreparedStatement pst, GridDescription gridDes) throws SQLException {
+    super(gridDes);
+    this.pst = pst;
+    this.update();
+  }
 
-    public void update() throws SQLException {
-        var asLists = executeStatement(this.pst);
-        this.setItems(asLists.getValues());
+  private static ResultSetUtils.ResultSetAsLists executeStatement(PreparedStatement pst)
+      throws SQLException {
+    try (ResultSet res = pst.executeQuery()) {
+      return ResultSetUtils.toLists(res);
     }
+  }
 
+  public void update() throws SQLException {
+    var asLists = executeStatement(this.pst);
+    this.setItems(asLists.getValues());
+  }
 }

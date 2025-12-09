@@ -25,26 +25,25 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.VuePrincipale;
 
 /**
- *
  * @author francois
  */
 public class LogoutEntete extends HorizontalLayout {
 
-    private Button bLogout;
+  private Button bLogout;
 
-    public LogoutEntete() {
-        this.bLogout = new Button("logout");
-        this.bLogout.addClickListener((t) -> {
-            this.doLogout();
+  public LogoutEntete() {
+    this.bLogout = new Button("logout");
+    this.bLogout.addClickListener(
+        (t) -> {
+          this.doLogout();
         });
-        this.add(new H3("bonjour " + SessionInfo.curSurnom()));
-        this.add(this.bLogout);
-    }
+    this.add(new H3("bonjour " + SessionInfo.curSurnom()));
+    this.add(this.bLogout);
+  }
 
-    public void doLogout() {
-        SessionInfo.logout();
-//        UI.getCurrent().refreshCurrentRoute(true);
-        UI.getCurrent().navigate(VuePrincipale.class);
-    }
-
+  public void doLogout() {
+    SessionInfo.logout();
+    //        UI.getCurrent().refreshCurrentRoute(true);
+    UI.getCurrent().navigate(VuePrincipale.class);
+  }
 }

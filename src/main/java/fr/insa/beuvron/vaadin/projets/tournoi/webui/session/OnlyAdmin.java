@@ -22,28 +22,27 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 
 /**
- * On utilise la possibilité de fournir une méthode par défaut à cette interface
- * pour rediriger vers une page d'erreur si l'utilisateur accède directement
- * (par son url) à une page à laquelle il n'a pas droit.
- * <p>
- * Utilisation typique : 
- * <pre> {@code 
+ * On utilise la possibilité de fournir une méthode par défaut à cette interface pour rediriger vers
+ * une page d'erreur si l'utilisateur accède directement (par son url) à une page à laquelle il n'a
+ * pas droit.
+ *
+ * <p>Utilisation typique :
+ *
+ * <pre>{@code
  * @Route(value = "uneUrl",layout = MainLayout.class)
  * public class UnePageReserveeAuxAdmin extends VerticalLayout implements OnlyAdmin
  * ...
- * } </pre>
- * </p>
+ * }</pre>
+ *
  * @author francois
  */
 public interface OnlyAdmin extends BeforeEnterObserver {
-    
-    @Override
-    default public void beforeEnter(BeforeEnterEvent event) {
-//        Notification.show("admin test : " + SessionInfo.adminConnected());
-        if (! SessionInfo.adminConnected()) {
-            event.rerouteTo(AdminNonConnecte.class);
-        }
-        
+
+  @Override
+  public default void beforeEnter(BeforeEnterEvent event) {
+    //        Notification.show("admin test : " + SessionInfo.adminConnected());
+    if (!SessionInfo.adminConnected()) {
+      event.rerouteTo(AdminNonConnecte.class);
     }
-    
+  }
 }

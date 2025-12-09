@@ -30,25 +30,29 @@ import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.MyIntegerField;
 import java.util.Optional;
 
 /**
- *
  * @author fdebertranddeb01
  */
-@Route(value = "tests/integerField",layout = MainLayout.class)
-public class TestIntegerTextField extends VerticalLayout{
-    
-    private MyIntegerField iField;
-    
-    public TestIntegerTextField() {
-        this.add(new H2("Test de IntegerField"));
-        this.iField = new MyIntegerField("Entrez un entier");
-        this.add(this.iField);
-        this.add(new Button("valeur Actuelle", (t) -> {
-            Optional<Integer> val = this.iField.getIntValue();
-            Notification.show("val texte : " + this.iField.getValue() +
-                    " ; val int : " + (val.isPresent() ?  val.get() : "invalid"));
-        }));
-        this.add(new H3("Un textfield qui ne fait rien pour tester le focus"));
-        this.add(new TextField("pour rien"));
-    }
-    
+@Route(value = "tests/integerField", layout = MainLayout.class)
+public class TestIntegerTextField extends VerticalLayout {
+
+  private MyIntegerField iField;
+
+  public TestIntegerTextField() {
+    this.add(new H2("Test de IntegerField"));
+    this.iField = new MyIntegerField("Entrez un entier");
+    this.add(this.iField);
+    this.add(
+        new Button(
+            "valeur Actuelle",
+            (t) -> {
+              Optional<Integer> val = this.iField.getIntValue();
+              Notification.show(
+                  "val texte : "
+                      + this.iField.getValue()
+                      + " ; val int : "
+                      + (val.isPresent() ? val.get() : "invalid"));
+            }));
+    this.add(new H3("Un textfield qui ne fait rien pour tester le focus"));
+    this.add(new TextField("pour rien"));
+  }
 }

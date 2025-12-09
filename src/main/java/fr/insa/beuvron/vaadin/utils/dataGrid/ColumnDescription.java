@@ -25,6 +25,7 @@ import java.util.Optional;
 
 /**
  * Description d'un colonne de la classe.
+ *
  * <pre>
  * <p> en vaadin, une colonne est calculée à partir d'une ligne des données.
  * Dans notre cas, une ligne est toujours une {@code List<Object>}.
@@ -79,247 +80,264 @@ import java.util.Optional;
  */
 public class ColumnDescription {
 
-    /**
-     * indique si la colonne est effectivement affichée
-     */
-    private boolean visible;
+  /** indique si la colonne est effectivement affichée */
+  private boolean visible;
 
-    private boolean autoWidth;
+  private boolean autoWidth;
 
-    /**
-     * indique le composant à utiliser comme entête de la colonne.
-     * <pre>
-     * <p>
-     * Si headerCompo et headerString sont tous les deux présents, le headerCompo
-     * est prioritaire.
-     * </p>
-     * <p> Si headerCompo et headerString sont tous les deux vides,
-     * la colonne n'a pas d'entête.
-     * </p>
-     * </pre>
-     */
-    private Optional<Component> headerCompo;
-    /**
-     * Donne l'entête de la colonne comme String.
-     * <pre>
-     * <p>
-     * Si headerCompo et headerString sont tous les deux présents, le headerCompo
-     * est prioritaire.
-     * </p>
-     * <p> Si headerCompo et headerString sont tous les deux vides,
-     * la colonne n'a pas d'entête.
-     * </p>
-     * </pre>
-     */
-    private Optional<String> headerString;
+  /**
+   * indique le composant à utiliser comme entête de la colonne.
+   *
+   * <pre>
+   * <p>
+   * Si headerCompo et headerString sont tous les deux présents, le headerCompo
+   * est prioritaire.
+   * </p>
+   * <p> Si headerCompo et headerString sont tous les deux vides,
+   * la colonne n'a pas d'entête.
+   * </p>
+   * </pre>
+   */
+  private Optional<Component> headerCompo;
 
-    /**
-     * fonction qui construit l'objet à afficher pour une ligne donnée.
-     * <pre>
-     * <p>
-     * Si toObjectFromRow et renderFromRow sont tous les deux présents, le renderFromRow
-     * est prioritaire.
-     * </p>
-     * <p> On moins un headerCompo ou un headerString doit être présent.
-     * </p>
-     * </pre>
-     */
-    private Optional<SerializableFunction<List<Object>, Object>> toObjectFromRow;
+  /**
+   * Donne l'entête de la colonne comme String.
+   *
+   * <pre>
+   * <p>
+   * Si headerCompo et headerString sont tous les deux présents, le headerCompo
+   * est prioritaire.
+   * </p>
+   * <p> Si headerCompo et headerString sont tous les deux vides,
+   * la colonne n'a pas d'entête.
+   * </p>
+   * </pre>
+   */
+  private Optional<String> headerString;
 
-    /**
-     * fonction qui renvoie le composant qui doit s'afficher dans la colonne
-     * pour une ligne donnée.
-     * <pre>
-     * <p>
-     * Si toObjectFromRow et renderFromRow sont tous les deux présents, le headerCompo
-     * est prioritaire.
-     * </p>
-     * <p> On moins un headerCompo ou un headerString doit être présent.
-     * </p>
-     * </pre>
-     */
-    private Optional<SerializableFunction<List<Object>, Component>> renderFromRow;
+  /**
+   * fonction qui construit l'objet à afficher pour une ligne donnée.
+   *
+   * <pre>
+   * <p>
+   * Si toObjectFromRow et renderFromRow sont tous les deux présents, le renderFromRow
+   * est prioritaire.
+   * </p>
+   * <p> On moins un headerCompo ou un headerString doit être présent.
+   * </p>
+   * </pre>
+   */
+  private Optional<SerializableFunction<List<Object>, Object>> toObjectFromRow;
 
-    /**
-     * crée une colonne par défaut qui affiche simplement "undefined".
-     * La description devra être complété par les méthodes de définition
-     * qui peuvent être enchainée.
-     */
-    public ColumnDescription() {
-        this.visible = true;
-        this.headerString = Optional.empty();
-        this.headerCompo = Optional.empty();
-        this.toObjectFromRow = Optional.of((row) -> "undefined");
-        this.renderFromRow = Optional.empty();
-        this.autoWidth = true;
-    }
+  /**
+   * fonction qui renvoie le composant qui doit s'afficher dans la colonne pour une ligne donnée.
+   *
+   * <pre>
+   * <p>
+   * Si toObjectFromRow et renderFromRow sont tous les deux présents, le headerCompo
+   * est prioritaire.
+   * </p>
+   * <p> On moins un headerCompo ou un headerString doit être présent.
+   * </p>
+   * </pre>
+   */
+  private Optional<SerializableFunction<List<Object>, Component>> renderFromRow;
 
-    /**
-     * défini si la colonne est visible (par défaut) ou non.
-     * @param visible
-     * @return 
-     */
-    public ColumnDescription visible(boolean visible) {
-        this.visible = visible;
-        return this;
-    }
+  /**
+   * crée une colonne par défaut qui affiche simplement "undefined". La description devra être
+   * complété par les méthodes de définition qui peuvent être enchainée.
+   */
+  public ColumnDescription() {
+    this.visible = true;
+    this.headerString = Optional.empty();
+    this.headerCompo = Optional.empty();
+    this.toObjectFromRow = Optional.of((row) -> "undefined");
+    this.renderFromRow = Optional.empty();
+    this.autoWidth = true;
+  }
 
-    /**
-     * défini si la largeur de la colonne s'adapte automatiquement au contenu
-     * (par défaut) ou non.
-     * @param auto
-     * @return 
-     */
-    public ColumnDescription autoWidth(boolean auto) {
-        this.autoWidth = auto;
-        return this;
-    }
+  /**
+   * défini si la colonne est visible (par défaut) ou non.
+   *
+   * @param visible
+   * @return
+   */
+  public ColumnDescription visible(boolean visible) {
+    this.visible = visible;
+    return this;
+  }
 
-    /**
-     * défini l'entete de la colonne comme du texte simple.
-     * @param header
-     * @return 
-     */
-    public ColumnDescription headerString(String header) {
-        this.headerString = Optional.of(header);
-        return this;
-    }
+  /**
+   * défini si la largeur de la colonne s'adapte automatiquement au contenu (par défaut) ou non.
+   *
+   * @param auto
+   * @return
+   */
+  public ColumnDescription autoWidth(boolean auto) {
+    this.autoWidth = auto;
+    return this;
+  }
 
-    /**
-     * défini l'entete de la colonne comme un composant quelconque.
-     * @param compo
-     * @return 
-     */
-    public ColumnDescription headerCompo(Component compo) {
-        this.headerCompo = Optional.of(compo);
-        return this;
-    }
+  /**
+   * défini l'entete de la colonne comme du texte simple.
+   *
+   * @param header
+   * @return
+   */
+  public ColumnDescription headerString(String header) {
+    this.headerString = Optional.of(header);
+    return this;
+  }
 
-    /**
-     * défini une fonction qui calcule la valeur affichée dans la colonne en
-     * fonction de l'ensemble des données de la ligne (une {@code List<Object>}).
-     * <pre>
-     *   <p> la valeur retournée est affichée directement par vaadin. Pour les objets
-     *       de type quelconque, vaadin appelle automatiquement toString.
-     *   </p>
-     * </pre>
-     * @param rowToObj
-     * @return 
-     */
-    public ColumnDescription colCalculatedObject(SerializableFunction<List<Object>, Object> rowToObj) {
-        this.toObjectFromRow = Optional.of(rowToObj);
-        return this;
-    }
+  /**
+   * défini l'entete de la colonne comme un composant quelconque.
+   *
+   * @param compo
+   * @return
+   */
+  public ColumnDescription headerCompo(Component compo) {
+    this.headerCompo = Optional.of(compo);
+    return this;
+  }
 
-    /**
-     * défini une fonction qui calcule un composant quelconque à afficher dans la colonne en
-     * fonction de l'ensemble des données de la ligne (une {@code List<Object>}).
-     * <pre>
-     *   <p> l'objet retourné est affiché directement par vaadin. Pour les objets
-     *       de type quelconque, vaadin appelle automatiquement toString.
-     *   </p>
-     * </pre>
-     * @param rowToCompo
-     * @return 
-     */
-    public ColumnDescription colCalculatedCompo(SerializableFunction<List<Object>, Component> rowToCompo) {
-        this.renderFromRow = Optional.of(rowToCompo);
-        return this;
-    }
+  /**
+   * défini une fonction qui calcule la valeur affichée dans la colonne en fonction de l'ensemble
+   * des données de la ligne (une {@code List<Object>}).
+   *
+   * <pre>
+   *   <p> la valeur retournée est affichée directement par vaadin. Pour les objets
+   *       de type quelconque, vaadin appelle automatiquement toString.
+   *   </p>
+   * </pre>
+   *
+   * @param rowToObj
+   * @return
+   */
+  public ColumnDescription colCalculatedObject(
+      SerializableFunction<List<Object>, Object> rowToObj) {
+    this.toObjectFromRow = Optional.of(rowToObj);
+    return this;
+  }
 
-    /**
-     * La colonne affiche simplement le contenu d'une colonne des données.
-     * <pre>
-     *   <p> la valeur retournée est affichée directement par vaadin. Pour les objets
-     *       de type quelconque, vaadin appelle automatiquement toString.
-     *   </p>
-     * </pre>
-     * @param dataColNum le numéro de la colonne dans les données.
-     * @return 
-     */
-    public ColumnDescription colData(int dataColNum) {
-        SerializableFunction<List<Object>, Object> combo
-                = (List<Object> x1) -> x1.get(dataColNum);
-        this.toObjectFromRow = Optional.of(combo);
-        return this;
-    }
+  /**
+   * défini une fonction qui calcule un composant quelconque à afficher dans la colonne en fonction
+   * de l'ensemble des données de la ligne (une {@code List<Object>}).
+   *
+   * <pre>
+   *   <p> l'objet retourné est affiché directement par vaadin. Pour les objets
+   *       de type quelconque, vaadin appelle automatiquement toString.
+   *   </p>
+   * </pre>
+   *
+   * @param rowToCompo
+   * @return
+   */
+  public ColumnDescription colCalculatedCompo(
+      SerializableFunction<List<Object>, Component> rowToCompo) {
+    this.renderFromRow = Optional.of(rowToCompo);
+    return this;
+  }
 
-    /**
-     * défini une fonction qui calcule la valeur affichée dans la colonne en
-     * fonction uniquement de la valeur d'une des colonnes de données (un {@code Object}).
-     * <pre>
-     *   <p> la valeur retournée est affichée directement par vaadin. Pour les objets
-     *       de type quelconque, vaadin appelle automatiquement toString.
-     *   </p>
-     * </pre>
-     * @param dataColNum le numéro de la colonne dans les données.
-     * @return 
-     */
-    public ColumnDescription colDataObject(int dataColNum, SerializableFunction<Object, Object> dataToObject) {
-        SerializableFunction<List<Object>, Object> combo
-                = (List<Object> x1) -> dataToObject.compose((List<Object> x2) -> x2.get(dataColNum)).apply(x1);
-        this.toObjectFromRow = Optional.of(combo);
-        return this;
-    }
+  /**
+   * La colonne affiche simplement le contenu d'une colonne des données.
+   *
+   * <pre>
+   *   <p> la valeur retournée est affichée directement par vaadin. Pour les objets
+   *       de type quelconque, vaadin appelle automatiquement toString.
+   *   </p>
+   * </pre>
+   *
+   * @param dataColNum le numéro de la colonne dans les données.
+   * @return
+   */
+  public ColumnDescription colData(int dataColNum) {
+    SerializableFunction<List<Object>, Object> combo = (List<Object> x1) -> x1.get(dataColNum);
+    this.toObjectFromRow = Optional.of(combo);
+    return this;
+  }
 
-    /**
-     * défini une fonction qui calcule un composant quelconque à afficher dans la colonne en
-     * fonction uniquement de la valeur d'une des colonnes de données (un {@code Object}).
-     * <pre>
-     *   <p> l'objet retourné est affiché directement par vaadin. Pour les objets
-     *       de type quelconque, vaadin appelle automatiquement toString.
-     *   </p>
-     * </pre>
-     * @param dataColNum le numéro de la colonne dans les données.
-     * @return 
-     */
-    public ColumnDescription colDataCompo(int dataColNum, SerializableFunction<Object, Component> dataCompo) {
-        SerializableFunction<List<Object>, Component> combo
-                = (List<Object> x1) -> dataCompo.compose((List<Object> x2) -> x2.get(dataColNum)).apply(x1);
-        this.renderFromRow = Optional.of(combo);
-        return this;
-    }
+  /**
+   * défini une fonction qui calcule la valeur affichée dans la colonne en fonction uniquement de la
+   * valeur d'une des colonnes de données (un {@code Object}).
+   *
+   * <pre>
+   *   <p> la valeur retournée est affichée directement par vaadin. Pour les objets
+   *       de type quelconque, vaadin appelle automatiquement toString.
+   *   </p>
+   * </pre>
+   *
+   * @param dataColNum le numéro de la colonne dans les données.
+   * @return
+   */
+  public ColumnDescription colDataObject(
+      int dataColNum, SerializableFunction<Object, Object> dataToObject) {
+    SerializableFunction<List<Object>, Object> combo =
+        (List<Object> x1) ->
+            dataToObject.compose((List<Object> x2) -> x2.get(dataColNum)).apply(x1);
+    this.toObjectFromRow = Optional.of(combo);
+    return this;
+  }
 
-    /**
-     * @return the visible
-     */
-    public boolean isVisible() {
-        return visible;
-    }
+  /**
+   * défini une fonction qui calcule un composant quelconque à afficher dans la colonne en fonction
+   * uniquement de la valeur d'une des colonnes de données (un {@code Object}).
+   *
+   * <pre>
+   *   <p> l'objet retourné est affiché directement par vaadin. Pour les objets
+   *       de type quelconque, vaadin appelle automatiquement toString.
+   *   </p>
+   * </pre>
+   *
+   * @param dataColNum le numéro de la colonne dans les données.
+   * @return
+   */
+  public ColumnDescription colDataCompo(
+      int dataColNum, SerializableFunction<Object, Component> dataCompo) {
+    SerializableFunction<List<Object>, Component> combo =
+        (List<Object> x1) -> dataCompo.compose((List<Object> x2) -> x2.get(dataColNum)).apply(x1);
+    this.renderFromRow = Optional.of(combo);
+    return this;
+  }
 
-    /**
-     * @return the headerCompo
-     */
-    public Optional<Component> getHeaderCompo() {
-        return headerCompo;
-    }
+  /**
+   * @return the visible
+   */
+  public boolean isVisible() {
+    return visible;
+  }
 
-    /**
-     * @return the headerString
-     */
-    public Optional<String> getHeaderString() {
-        return headerString;
-    }
+  /**
+   * @return the headerCompo
+   */
+  public Optional<Component> getHeaderCompo() {
+    return headerCompo;
+  }
 
-    /**
-     * @return the toObjectFromRow
-     */
-    public Optional<SerializableFunction<List<Object>, Object>> getToObjectFromRow() {
-        return toObjectFromRow;
-    }
+  /**
+   * @return the headerString
+   */
+  public Optional<String> getHeaderString() {
+    return headerString;
+  }
 
-    /**
-     * @return the renderFromRow
-     */
-    public Optional<SerializableFunction<List<Object>, Component>> getRenderFromRow() {
-        return renderFromRow;
-    }
+  /**
+   * @return the toObjectFromRow
+   */
+  public Optional<SerializableFunction<List<Object>, Object>> getToObjectFromRow() {
+    return toObjectFromRow;
+  }
 
-    /**
-     * @return the autoWidth
-     */
-    public boolean isAutoWidth() {
-        return autoWidth;
-    }
+  /**
+   * @return the renderFromRow
+   */
+  public Optional<SerializableFunction<List<Object>, Component>> getRenderFromRow() {
+    return renderFromRow;
+  }
 
+  /**
+   * @return the autoWidth
+   */
+  public boolean isAutoWidth() {
+    return autoWidth;
+  }
 }

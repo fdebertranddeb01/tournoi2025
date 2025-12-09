@@ -29,30 +29,26 @@ import fr.insa.beuvron.vaadin.projets.tournoi.webui.session.OnlyAdmin;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.MyIntegerField;
 
 /**
- *
  * @author fdebertranddeb01
  */
-@Route(value = "admin/edit",layout = MainLayout.class)
+@Route(value = "admin/edit", layout = MainLayout.class)
 public class EditGeneralParams extends FormLayout implements OnlyAdmin {
-    
-    private MyIntegerField ifMaxSizePhotoInKo;
-    private TextField tfWidthOfPhotoInJoueurList;
-    private TextField tfHeightOfPhotoInJoueurList;
-    private Button bSave;
-    
-    public EditGeneralParams() {
-        this.add(new H3("taille max fichiers photo en Ko"));
-        this.ifMaxSizePhotoInKo = new MyIntegerField();
-        this.add(new H3("taille (largeur) d'affichage des vignettes photo"));
-        this.add(new Paragraph("cette taille doit être exprimée comme en css"));
-        this.add(new Paragraph("exemples : 200px , 5em , 3cm"));
-        this.tfWidthOfPhotoInJoueurList = new TextField();
-        this.add(new H3("taille (hauteur) d'affichage des vignettes photo"));
-        this.add(new Paragraph("cette taille doit être exprimée comme en css"));
-        this.add(new Paragraph("exemples : 200px , 5em , 3cm"));
-        this.tfHeightOfPhotoInJoueurList = new TextField();
-        
-        
-    }
-    
+
+  private MyIntegerField ifMaxSizePhotoInKo;
+  private TextField tfWidthOfPhotoInJoueurList;
+  private TextField tfHeightOfPhotoInJoueurList;
+  private Button bSave;
+
+  public EditGeneralParams() {
+    this.add(new H3("taille max fichiers photo en Ko"));
+    this.ifMaxSizePhotoInKo = new MyIntegerField();
+    this.add(new H3("taille (largeur) d'affichage des vignettes photo"));
+    this.add(new Paragraph("cette taille doit être exprimée comme en css"));
+    this.add(new Paragraph("exemples : 200px , 5em , 3cm"));
+    this.tfWidthOfPhotoInJoueurList = new TextField();
+    this.add(new H3("taille (hauteur) d'affichage des vignettes photo"));
+    this.add(new Paragraph("cette taille doit être exprimée comme en css"));
+    this.add(new Paragraph("exemples : 200px , 5em , 3cm"));
+    this.tfHeightOfPhotoInJoueurList = new TextField();
+  }
 }

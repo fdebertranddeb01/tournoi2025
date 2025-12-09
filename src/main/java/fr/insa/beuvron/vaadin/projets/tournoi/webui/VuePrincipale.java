@@ -24,15 +24,13 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 /**
- *
  * @author francois
  */
-@Route(value = "",layout = MainLayout.class)
+@Route(value = "", layout = MainLayout.class)
 @PageTitle("Tournois")
 public class VuePrincipale extends VerticalLayout {
-    
-    public VuePrincipale() {
-        this.add(new H2("TODO2: vue principale du projet tournoi"));
-    }
 
+  public VuePrincipale() {
+    this.add(new H2("TODO2: vue principale du projet tournoi"));
+  }
 }

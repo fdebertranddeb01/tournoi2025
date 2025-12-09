@@ -29,49 +29,49 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- *
  * @author francois
  */
 public class LoginEntete extends FlexLayout {
 
-    public TextField tfSurnom;
-    public PasswordField pfPass;
-    public Button bLogin;
-    public Button bInscription;
+  public TextField tfSurnom;
+  public PasswordField pfPass;
+  public Button bLogin;
+  public Button bInscription;
 
-    public LoginEntete() {
-        this.setWidthFull();
-        this.setAlignItems(Alignment.END);
-        this.setFlexDirection(FlexDirection.ROW);
-        this.setFlexWrap(FlexWrap.WRAP);
-        this.getStyle().set("gap", "5px");
-        this.tfSurnom = new TextField("surnom : ");
-        this.pfPass = new PasswordField("pass : ");
-        this.bLogin = new Button("se connecter");
-        this.bLogin.addClickListener((t) -> {
-            this.doLogin();
+  public LoginEntete() {
+    this.setWidthFull();
+    this.setAlignItems(Alignment.END);
+    this.setFlexDirection(FlexDirection.ROW);
+    this.setFlexWrap(FlexWrap.WRAP);
+    this.getStyle().set("gap", "5px");
+    this.tfSurnom = new TextField("surnom : ");
+    this.pfPass = new PasswordField("pass : ");
+    this.bLogin = new Button("se connecter");
+    this.bLogin.addClickListener(
+        (t) -> {
+          this.doLogin();
         });
-        this.bInscription = new Button("s'inscrire");
-        this.bInscription.addClickListener((t) -> {
-            //TODO
-//            UI.getCurrent().navigate(Inscription.class);
+    this.bInscription = new Button("s'inscrire");
+    this.bInscription.addClickListener(
+        (t) -> {
+          // TODO
+          //            UI.getCurrent().navigate(Inscription.class);
         });
-        this.add(this.tfSurnom, this.pfPass, this.bLogin, this.bInscription);
-    }
+    this.add(this.tfSurnom, this.pfPass, this.bLogin, this.bInscription);
+  }
 
-    public void doLogin() {
-        String surnom = this.tfSurnom.getValue();
-        String pass = this.pfPass.getValue();
-        try (Connection con = ConnectionPool.getConnection()) {
-            boolean ok = SessionInfo.tryLogin(con, surnom, pass);
-            if (!ok) {
-                Notification.show("Surnom ou pass incorrect");
-            } else {
-                UI.getCurrent().refreshCurrentRoute(true);
-            }
-        } catch (SQLException ex) {
-            Notification.show("Problème " + ex.getLocalizedMessage());
-        }
+  public void doLogin() {
+    String surnom = this.tfSurnom.getValue();
+    String pass = this.pfPass.getValue();
+    try (Connection con = ConnectionPool.getConnection()) {
+      boolean ok = SessionInfo.tryLogin(con, surnom, pass);
+      if (!ok) {
+        Notification.show("Surnom ou pass incorrect");
+      } else {
+        UI.getCurrent().refreshCurrentRoute(true);
+      }
+    } catch (SQLException ex) {
+      Notification.show("Problème " + ex.getLocalizedMessage());
     }
-
+  }
 }

@@ -24,53 +24,52 @@ import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import java.util.Optional;
 
 /**
- *
  * @author fdebertranddeb01
  */
-public class MyIntegerField extends TextField{
-    
-    private int poub;
-    
-    public MyIntegerField() {
-        super();
-        this.finInit();
-    }
+public class MyIntegerField extends TextField {
 
-    public MyIntegerField(String label) {
-        super(label);
-        this.finInit();
-    }   
-    
-    private void finInit() {
-        Binder<MyIntegerField> binder = new Binder<>(MyIntegerField.class);
-        binder.forField(this)
-                .withConverter(new StringToIntegerConverter("doit être un entier"))
-                .bind(MyIntegerField::getPoub,MyIntegerField::setPoub);
-    }
+  private int poub;
 
-    /**
-     * @return the intValue
-     */
-    public Optional<Integer> getIntValue() {
-        try {
-            return Optional.of(Integer.parseInt(this.getValue()));
-        } catch (NumberFormatException ex) {
-            return Optional.empty();
-        }
-    }
+  public MyIntegerField() {
+    super();
+    this.finInit();
+  }
 
-    /**
-     * @return the poub
-     */
-    public int getPoub() {
-        return poub;
-    }
+  public MyIntegerField(String label) {
+    super(label);
+    this.finInit();
+  }
 
-    /**
-     * @param poub the poub to set
-     */
-    public void setPoub(int poub) {
-        this.poub = poub;
+  private void finInit() {
+    Binder<MyIntegerField> binder = new Binder<>(MyIntegerField.class);
+    binder
+        .forField(this)
+        .withConverter(new StringToIntegerConverter("doit être un entier"))
+        .bind(MyIntegerField::getPoub, MyIntegerField::setPoub);
+  }
+
+  /**
+   * @return the intValue
+   */
+  public Optional<Integer> getIntValue() {
+    try {
+      return Optional.of(Integer.parseInt(this.getValue()));
+    } catch (NumberFormatException ex) {
+      return Optional.empty();
     }
-    
+  }
+
+  /**
+   * @return the poub
+   */
+  public int getPoub() {
+    return poub;
+  }
+
+  /**
+   * @param poub the poub to set
+   */
+  public void setPoub(int poub) {
+    this.poub = poub;
+  }
 }

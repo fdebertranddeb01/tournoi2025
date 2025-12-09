@@ -39,15 +39,7 @@ public class GestionSchema {
       con.setAutoCommit(false);
       try (Statement st = con.createStatement()) {
         // creation des tables
-        st.executeUpdate(
-            "create table generalparams ( "
-                + "maxsizephotoinko integer not null,"
-                // la taille des vignettes des photos des joueurs
-                // quand is sont dans une liste
-                // la chaîne de caractère doit être une mesure css valide
-                + "widthofphotoinjoueurlist varchar(20) not null,"
-                + "heightofphotoinjoueurlist varchar(20) not null"
-                + ") ");
+        GeneralParams.creeTableParams(con);
         st.executeUpdate(
             "create table role ( "
                 + "id integer primary key,"
@@ -98,10 +90,7 @@ public class GestionSchema {
         st.executeUpdate("drop table role");
       } catch (SQLException ex) {
       }
-      try {
-        st.executeUpdate("drop table generalparams");
-      } catch (SQLException ex) {
-      }
+      GeneralParams.dropTableParams(con);
     }
   }
 

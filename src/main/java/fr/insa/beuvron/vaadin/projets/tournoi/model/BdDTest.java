@@ -19,6 +19,8 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.beuvron.vaadin.projets.tournoi.model;
 
 import fr.insa.beuvron.utils.database.ConnectionSimpleSGBD;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.SmallImage;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -29,6 +31,7 @@ import java.util.List;
 public class BdDTest {
 
   public static void createBdDTest(Connection con) throws SQLException {
+    SmallImage content = SmallImage.PETIT_SMILEY_PNG;
     List<Joueur> users =
         List.of(
             new Joueur("toto", "p1", 1, null, null),

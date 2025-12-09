@@ -22,6 +22,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
+import fr.insa.beuvron.utils.database.ConnectionSimpleSGBD;
 
 /**
  * Gestion des paramètres généraux de l'application.
@@ -30,50 +33,112 @@ import java.sql.SQLException;
  */
 public class GeneralParams {
 
-  public static int maxSizePhotoInKo = 1024;
+  /** taille maximale des fichiers de photo que l'utilisateur peut uploader */
+  public static int maxSizePhotoFileInKo = 1024;
+  /**
+   * la largeur des photos quand représentés dans une liste de joueurs.
+   * Cette valeur doit être une mesure CSS valide (ex: "4em", "100px", etc.)
+   */
   public static String widthOfPhotoInJoueurList = "4em";
+  /**
+   * la hauteur des photos quand représentés dans une liste de joueurs.
+   * Cette valeur doit être une mesure CSS valide (ex: "4em", "100px", etc.)
+   */
   public static String heightOfPhotoInJoueurList = "6em";
-  /** Hauteur (en pixels) utilisée pour redimensionner les photos lors d'un upload/affichage */
-  public static int resizePhotoHeightInPixel = 300;
-  /** Largeur (en pixels) utilisée pour redimensionner les photos lors d'un upload/affichage */
-  public static int resizePhotoWidthInPixel = 200;
+  /**
+   * largeur des photos quand représentés dans un panneau joueur (ex: vue
+   * détaillée)
+   */
+  public static String widthOfPhotoInJoueurPanel = "8em";
+  /**
+   * hauteur des photos quand représentés dans un panneau joueur (ex: vue
+   * détaillée)
+   */
+  public static String heightOfPhotoInJoueurPanel = "12em";
+  /**
+   * taille (largeur) des photos sauvegardées dans la BdD. Les photos sont
+   * automatiquement
+   * redimensionnées à cette taille lors de l'upload.
+   */
+  public static int photoHeightInPixelInDB = 300;
+  /**
+   * taille (largeur) des photos sauvegardées dans la BdD. Les photos sont
+   * automatiquement
+   * redimensionnées à cette taille lors de l'upload.
+   */
+  public static int photoWidthInPixelInDB = 200;
+
+  public static void creeTableParams(Connection con) throws SQLException {
+    try (Statement st = con.createStatement()) {
+      // creation des tables
+      st.executeUpdate(
+          "create table generalparams ( "
+              + "maxsizephotofileinko integer not null,"
+              // la taille des vignettes des photos des joueurs
+              // quand is sont dans une liste
+              // la chaîne de caractère doit être une mesure css valide
+              + "widthofphotoinjoueurlist varchar(20) not null,"
+              + "heightofphotoinjoueurlist varchar(20) not null,"
+              + "widthofphotoinjoueurpanel varchar(20) not null,"
+              + "heightofphotoinjoueurpanel varchar(20) not null,"
+              + "photoheightinpixelindb integer not null,"
+              + "photowidthinpixelindb varchar(20) not null"
+              + ") ");
+    }
+  }
+
+  public static void dropTableParams(Connection con) {
+    try (Statement st = con.createStatement()) {
+      // creation des tables
+      st.executeUpdate(
+          "drop table generalparams ");
+    } catch (SQLException e) {
+      // rien à faire, la table n'existait pas
+    }
+  }
 
   public static void loadGeneralParams(Connection con) throws SQLException {
     try (PreparedStatement pst = con.prepareStatement(
-      "select maxsizephotoinko,widthofphotoinjoueurlist,heightofphotoinjoueurlist,resizephotoheightinpixel,resizephotowidthinpixel "
-        + " from generalparams")) {
+        "select maxsizephotoinko,widthofphotoinjoueurlist,heightofphotoinjoueurlist,resizephotoheightinpixel,resizephotowidthinpixel,widthofphotoinjoueurpanel,heightofphotoinjoueurpanel "
+            + " from generalparams")) {
       ResultSet res = pst.executeQuery();
       res.next();
-      maxSizePhotoInKo = res.getInt(1);
+      maxSizePhotoFileInKo = res.getInt(1);
       widthOfPhotoInJoueurList = res.getString(2);
       heightOfPhotoInJoueurList = res.getString(3);
-      resizePhotoHeightInPixel = res.getInt(4);
-      resizePhotoWidthInPixel = res.getInt(5);
+      photoHeightInPixelInDB = res.getInt(4);
+      photoWidthInPixelInDB = res.getInt(5);
+      widthOfPhotoInJoueurPanel = res.getString(6);
+      heightOfPhotoInJoueurPanel = res.getString(7);
     }
   }
 
   public static void saveGeneralParams(Connection con) throws SQLException {
     try (PreparedStatement pst = con.prepareStatement(
-      "update generalparams set maxsizephotoinko=?,widthofphotoinjoueurlist=?,"
-        + "heightofphotoinjoueurlist=?,resizephotoheightinpixel=?,resizephotowidthinpixel=?")) {
-      pst.setInt(1, maxSizePhotoInKo);
+        "update generalparams set maxsizephotoinko=?,widthofphotoinjoueurlist=?,"
+            + "heightofphotoinjoueurlist=?,resizephotoheightinpixel=?,resizephotowidthinpixel=?,widthofphotoinjoueurpanel=?,heightofphotoinjoueurpanel=?")) {
+      pst.setInt(1, maxSizePhotoFileInKo);
       pst.setString(2, widthOfPhotoInJoueurList);
       pst.setString(3, heightOfPhotoInJoueurList);
-      pst.setInt(4, resizePhotoHeightInPixel);
-      pst.setInt(5, resizePhotoWidthInPixel);
+      pst.setInt(4, photoHeightInPixelInDB);
+      pst.setInt(5, photoWidthInPixelInDB);
+      pst.setString(6, widthOfPhotoInJoueurPanel);
+      pst.setString(7, heightOfPhotoInJoueurPanel);
       pst.executeUpdate();
     }
   }
 
   public static void initDefaultGeneralParams(Connection con) throws SQLException {
     try (PreparedStatement pst = con.prepareStatement(
-      "insert into generalparams (maxsizephotoinko,widthofphotoinjoueurlist,"
-        + "heightofphotoinjoueurlist,resizephotoheightinpixel,resizephotowidthinpixel) values (?,?,?,?,?)")) {
+        "insert into generalparams (maxsizephotoinko,widthofphotoinjoueurlist,"
+            + "heightofphotoinjoueurlist,resizephotoheightinpixel,resizephotowidthinpixel,widthofphotoinjoueurpanel,heightofphotoinjoueurpanel) values (?,?,?,?,?,?,?)")) {
       pst.setInt(1, 1024);
       pst.setString(2, "4em");
       pst.setString(3, "6em");
       pst.setInt(4, 300);
       pst.setInt(5, 200);
+      pst.setString(6, "8em");
+      pst.setString(7, "10em");
       pst.executeUpdate();
     }
   }

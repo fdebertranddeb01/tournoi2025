@@ -31,7 +31,7 @@ import java.util.List;
 public class BdDTest {
 
   public static void createBdDTest(Connection con) throws SQLException {
-    SmallImage content = SmallImage.PETIT_SMILEY_PNG;
+    SmallImage content = SmallImage.PETIT_SMILEY_CONTENT_PNG;
     List<Joueur> users =
         List.of(
             new Joueur("toto", "p1", 1, null, null),

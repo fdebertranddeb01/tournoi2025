@@ -16,11 +16,24 @@ public class JoueurMiniPanel extends HorizontalLayout {
 
   public JoueurMiniPanel(Joueur joueur) {
     Div vaadImage = new Div();
-    vaadImage.setWidth(GeneralParams.widthOfPhotoInJoueurList);
-    vaadImage.setHeight(GeneralParams.heightOfPhotoInJoueurList);
+    // ajouter une bordure autour de vaadImage
+    vaadImage.getStyle().set("border", "1px solid black");
+    // ajouter un padding de 2px autour de l'image
+    vaadImage.getStyle().set("padding", "2px");
+    // utiliser un flex layout pour centrer l'image
+    vaadImage.getStyle().set("display", "flex");
+    vaadImage.getStyle().set("justify-content", "center");
+    vaadImage.getStyle().set("align-items", "center");
+    vaadImage.setWidth(GeneralParams.widthOfPhotoInJoueurList + "px");
+    vaadImage.setHeight(GeneralParams.heightOfPhotoInJoueurList + "px");
     if (joueur.getPhoto() != null) {
-      this.photoJoueur = new SmallImage(joueur.getPhoto(), joueur.getPhotoType());
-      vaadImage.add(this.photoJoueur.toVaadinImage("Problem loading player photo"));
+      try {
+        this.photoJoueur = new SmallImage(joueur.getPhoto(), joueur.getPhotoType())
+            .resizeToPNG(GeneralParams.widthOfPhotoInJoueurList, GeneralParams.heightOfPhotoInJoueurList);
+      } catch (Exception e) {
+        vaadImage.add(VaadinIcon.BAN.create());;
+      }
+      vaadImage.add(this.photoJoueur.toVaadinImage("Problème Affichage photo joueur"));
     } else {
       vaadImage.add(VaadinIcon.BAN.create());
     }

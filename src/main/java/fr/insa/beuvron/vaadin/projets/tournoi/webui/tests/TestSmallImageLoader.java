@@ -38,7 +38,7 @@ public class TestSmallImageLoader extends VerticalLayout {
 
   public TestSmallImageLoader() {
     this.add(new H2("Test de l'upload d'image"));
-    this.imgUploader = new SmallImageWithUploader(50000, "200px", "300px");
+    this.imgUploader = new SmallImageWithUploader(50000, 200, 300);
     this.add(this.imgUploader);
     this.add(
         new Button(

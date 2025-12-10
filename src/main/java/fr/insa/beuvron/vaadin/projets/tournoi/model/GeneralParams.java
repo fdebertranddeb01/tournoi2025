@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import fr.insa.beuvron.utils.database.ConnectionSimpleSGBD;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.Application;
 
 /**
  * Gestion des paramètres généraux de l'application.
@@ -36,25 +37,23 @@ public class GeneralParams {
   /** taille maximale des fichiers de photo que l'utilisateur peut uploader */
   public static int maxSizePhotoFileInKo = 1024;
   /**
-   * la largeur des photos quand représentés dans une liste de joueurs.
-   * Cette valeur doit être une mesure CSS valide (ex: "4em", "100px", etc.)
+   * la largeur des photos en pixel quand représentés dans une liste de joueurs.
    */
-  public static String widthOfPhotoInJoueurList = "4em";
+  public static int widthOfPhotoInJoueurList = 40;
   /**
-   * la hauteur des photos quand représentés dans une liste de joueurs.
-   * Cette valeur doit être une mesure CSS valide (ex: "4em", "100px", etc.)
+   * la hauteur des photos en pixel quand représentés dans une liste de joueurs.
    */
-  public static String heightOfPhotoInJoueurList = "6em";
+  public static int heightOfPhotoInJoueurList = 60;
   /**
-   * largeur des photos quand représentés dans un panneau joueur (ex: vue
+   * largeur des photos en pixel quand représentés dans un panneau joueur (ex: vue
    * détaillée)
    */
-  public static String widthOfPhotoInJoueurPanel = "8em";
+  public static int widthOfPhotoInJoueurPanel = 120;
   /**
-   * hauteur des photos quand représentés dans un panneau joueur (ex: vue
+   * hauteur des photos en pixel quand représentés dans un panneau joueur (ex: vue
    * détaillée)
    */
-  public static String heightOfPhotoInJoueurPanel = "12em";
+  public static int heightOfPhotoInJoueurPanel = 180;
   /**
    * taille (largeur) des photos sauvegardées dans la BdD. Les photos sont
    * automatiquement
@@ -77,12 +76,12 @@ public class GeneralParams {
               // la taille des vignettes des photos des joueurs
               // quand is sont dans une liste
               // la chaîne de caractère doit être une mesure css valide
-              + "widthofphotoinjoueurlist varchar(20) not null,"
-              + "heightofphotoinjoueurlist varchar(20) not null,"
-              + "widthofphotoinjoueurpanel varchar(20) not null,"
-              + "heightofphotoinjoueurpanel varchar(20) not null,"
+              + "widthofphotoinjoueurlist integer not null,"
+              + "heightofphotoinjoueurlist integer not null,"
+              + "widthofphotoinjoueurpanel integer not null,"
+              + "heightofphotoinjoueurpanel integer not null,"
               + "photoheightinpixelindb integer not null,"
-              + "photowidthinpixelindb varchar(20) not null"
+              + "photowidthinpixelindb integer not null"
               + ") ");
     }
   }
@@ -99,47 +98,64 @@ public class GeneralParams {
 
   public static void loadGeneralParams(Connection con) throws SQLException {
     try (PreparedStatement pst = con.prepareStatement(
-        "select maxsizephotoinko,widthofphotoinjoueurlist,heightofphotoinjoueurlist,resizephotoheightinpixel,resizephotowidthinpixel,widthofphotoinjoueurpanel,heightofphotoinjoueurpanel "
+        "select maxsizephotofileinko,"
+            + "widthofphotoinjoueurlist,heightofphotoinjoueurlist,"
+            + "photoheightinpixelindb,photowidthinpixelindb,"
+            + "widthofphotoinjoueurpanel,heightofphotoinjoueurpanel "
             + " from generalparams")) {
       ResultSet res = pst.executeQuery();
       res.next();
       maxSizePhotoFileInKo = res.getInt(1);
-      widthOfPhotoInJoueurList = res.getString(2);
-      heightOfPhotoInJoueurList = res.getString(3);
+      widthOfPhotoInJoueurList = res.getInt(2);
+      heightOfPhotoInJoueurList = res.getInt(3);
       photoHeightInPixelInDB = res.getInt(4);
       photoWidthInPixelInDB = res.getInt(5);
-      widthOfPhotoInJoueurPanel = res.getString(6);
-      heightOfPhotoInJoueurPanel = res.getString(7);
+      widthOfPhotoInJoueurPanel = res.getInt(6);
+      heightOfPhotoInJoueurPanel = res.getInt(7);
     }
   }
 
   public static void saveGeneralParams(Connection con) throws SQLException {
     try (PreparedStatement pst = con.prepareStatement(
-        "update generalparams set maxsizephotoinko=?,widthofphotoinjoueurlist=?,"
-            + "heightofphotoinjoueurlist=?,resizephotoheightinpixel=?,resizephotowidthinpixel=?,widthofphotoinjoueurpanel=?,heightofphotoinjoueurpanel=?")) {
+        "update generalparams set "
+            + "maxsizephotofileinko=?,"
+            + "widthofphotoinjoueurlist=?,heightofphotoinjoueurlist=?,"
+            + " photoheightinpixelindb=?,photowidthinpixelindb=?,"
+            + "widthofphotoinjoueurpanel=?,heightofphotoinjoueurpanel=?")) {
       pst.setInt(1, maxSizePhotoFileInKo);
-      pst.setString(2, widthOfPhotoInJoueurList);
-      pst.setString(3, heightOfPhotoInJoueurList);
+      pst.setInt(2, widthOfPhotoInJoueurList);
+      pst.setInt(3, heightOfPhotoInJoueurList);
       pst.setInt(4, photoHeightInPixelInDB);
       pst.setInt(5, photoWidthInPixelInDB);
-      pst.setString(6, widthOfPhotoInJoueurPanel);
-      pst.setString(7, heightOfPhotoInJoueurPanel);
+      pst.setInt(6, widthOfPhotoInJoueurPanel);
+      pst.setInt(7, heightOfPhotoInJoueurPanel);
       pst.executeUpdate();
     }
   }
 
   public static void initDefaultGeneralParams(Connection con) throws SQLException {
     try (PreparedStatement pst = con.prepareStatement(
-        "insert into generalparams (maxsizephotoinko,widthofphotoinjoueurlist,"
-            + "heightofphotoinjoueurlist,resizephotoheightinpixel,resizephotowidthinpixel,widthofphotoinjoueurpanel,heightofphotoinjoueurpanel) values (?,?,?,?,?,?,?)")) {
+        "insert into generalparams (maxsizephotofileinko,"
+            + "widthofphotoinjoueurlist,heightofphotoinjoueurlist,"
+            + "photoheightinpixelindb,photowidthinpixelindb,"
+            + "widthofphotoinjoueurpanel,heightofphotoinjoueurpanel) values (?,?,?,?,?,?,?)")) {
       pst.setInt(1, 1024);
-      pst.setString(2, "4em");
-      pst.setString(3, "6em");
+      pst.setInt(2, 40);
+      pst.setInt(3, 60);
       pst.setInt(4, 300);
       pst.setInt(5, 200);
-      pst.setString(6, "8em");
-      pst.setString(7, "10em");
+      pst.setInt(6, 120);
+      pst.setInt(7, 180);
       pst.executeUpdate();
+    }
+    // debug à supprimer
+    if (Application.DEBUG) {
+      maxSizePhotoFileInKo = 2048;
+      saveGeneralParams(con);
+      maxSizePhotoFileInKo = 512;
+      loadGeneralParams(con);
+      System.out.println("GeneralParams.initDefaultGeneralParams: "
+          + " maxSizePhotoFileInKo=" + maxSizePhotoFileInKo);
     }
   }
 

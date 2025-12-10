@@ -95,17 +95,7 @@ public class GestionSchema {
   }
 
   public static void createBdDVide(Connection con) throws SQLException {
-    try (PreparedStatement pst =
-        con.prepareStatement(
-            "insert into generalparams ("
-                + "maxsizephotoinko,"
-                + "widthofphotoinjoueurlist,"
-                + "heightofphotoinjoueurlist) values (?,?,?)")) {
-      pst.setInt(1, 1024);
-      pst.setString(2, "4em");
-      pst.setString(3, "6em");
-      pst.executeUpdate();
-    }
+    GeneralParams.initDefaultGeneralParams(con);
     List<Role> roles =
         List.of(
             new Role(1, "admin", "tous les droits sur l'ensemble de l'application", 1),

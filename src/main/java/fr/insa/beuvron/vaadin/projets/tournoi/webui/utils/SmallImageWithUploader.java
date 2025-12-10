@@ -22,9 +22,11 @@ import java.util.Optional;
 
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+
 /**
  * @author fdebertranddeb01
  */
@@ -32,16 +34,24 @@ public class SmallImageWithUploader extends HorizontalLayout {
 
   private SmallImageUploader uploader;
   private Div imagePlace;
+  private int imgWidthInPixel;
+  private int imgHeightInPixel;
 
   private SmallImage curImage;
 
-  public SmallImageWithUploader(int maxFileSize, String imgWidth, String imgHeight) {
+  public SmallImageWithUploader(int maxFileSize, int imgWidthInPixel, int imgHeightInPixel) {
+    this.imgWidthInPixel = imgWidthInPixel;
+    this.imgHeightInPixel = imgHeightInPixel;
     this.imagePlace = new Div();
     this.imagePlace.getStyle().set("border", "1px solid black");
-    this.imagePlace.setMaxWidth(imgWidth);
-    this.imagePlace.setMaxHeight(imgHeight);
-    this.imagePlace.setMinWidth(imgWidth);
-    this.imagePlace.setMinHeight(imgHeight);
+    // centrer le contenu de imagePlace
+    this.imagePlace.getStyle().set("display", "flex");
+    this.imagePlace.getStyle().set("justify-content", "center");
+    this.imagePlace.getStyle().set("align-items", "center");
+    this.imagePlace.setMaxWidth(imgWidthInPixel + "px");
+    this.imagePlace.setMaxHeight(imgHeightInPixel + "px");
+    this.imagePlace.setMinWidth(imgWidthInPixel + "px");
+    this.imagePlace.setMinHeight(imgHeightInPixel + "px");
     this.uploader = new SmallImageUploader(maxFileSize);
     this.uploader.addAllFinishedListener(
         (t) -> {
@@ -56,13 +66,21 @@ public class SmallImageWithUploader extends HorizontalLayout {
     byte[] imgData = this.uploader.getImageData();
     if (imgData == null) {
       Icon icon = VaadinIcon.BAN.create();
-      icon.setSize("2cm");
-      this.imagePlace.add();
+      icon.setSize(this.imgWidthInPixel + "px");
+      this.imagePlace.add(icon);
       this.curImage = null;
     } else {
-      this.curImage = new SmallImage(imgData, this.uploader.getImageType());
-      Image img = this.curImage.toVaadinImage("Problem loading image");
-      this.imagePlace.add(img);
+      try {
+        this.curImage = new SmallImage(imgData, this.uploader.getImageType())
+            .resizeToPNG(this.imgWidthInPixel, this.imgHeightInPixel);
+        Image img = this.curImage.toVaadinImage("Problem affichage image");
+        this.imagePlace.add(img);
+      } catch (Exception e) {
+        Paragraph errorPara = new Paragraph("image invalide");
+        this.imagePlace.add(errorPara);
+        this.curImage = null;
+      }
+
     }
   }
 

@@ -38,6 +38,7 @@ public class SmallImageWithUploader extends HorizontalLayout {
   private int imgHeightInPixel;
 
   private SmallImage curImage;
+  private SmallImage curImageResized;
 
   public SmallImageWithUploader(int maxFileSize, int imgWidthInPixel, int imgHeightInPixel) {
     this.imgWidthInPixel = imgWidthInPixel;
@@ -71,14 +72,15 @@ public class SmallImageWithUploader extends HorizontalLayout {
       this.curImage = null;
     } else {
       try {
-        this.curImage = new SmallImage(imgData, this.uploader.getImageType())
-            .resizeToPNG(this.imgWidthInPixel, this.imgHeightInPixel);
-        Image img = this.curImage.toVaadinImage("Problem affichage image");
+        this.curImage = new SmallImage(imgData, this.uploader.getImageType());
+        this.curImageResized= this.curImage.resizeToPNG(this.imgWidthInPixel, this.imgHeightInPixel);
+        Image img = this.curImageResized.toVaadinImage("Problem affichage image");
         this.imagePlace.add(img);
       } catch (Exception e) {
         Paragraph errorPara = new Paragraph("image invalide");
         this.imagePlace.add(errorPara);
         this.curImage = null;
+        this.curImageResized = null;
       }
 
     }
@@ -90,6 +92,10 @@ public class SmallImageWithUploader extends HorizontalLayout {
 
   public Optional<SmallImage> getCurrentImage() {
     return Optional.ofNullable(this.curImage);
+  }
+
+  public Optional<SmallImage> getCurrentResizedImage() {
+    return Optional.ofNullable(this.curImageResized);
   }
 
 }

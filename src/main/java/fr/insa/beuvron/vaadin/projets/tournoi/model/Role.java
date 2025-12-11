@@ -21,7 +21,7 @@ package fr.insa.beuvron.vaadin.projets.tournoi.model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 
 /**
  * Les rôles dans le logiciel.
@@ -57,6 +57,26 @@ import java.sql.Statement;
  * @author fdebertranddeb01
  */
 public class Role {
+
+    public static final int ID_ROLE_ADMIN = 1;
+    public static final int ID_ROLE_CREATEUR = 2;
+    public static final int ID_ROLE_JOUEUR = 3;
+    public static final int ID_ROLE_GESTIONNAIRE = 4;
+    public static final int ID_ROLE_ARBITRE = 5;
+
+    public static final Role ROLE_ADMIN = new Role(ID_ROLE_ADMIN, "administrateur", "Rôle donnant tous les droits sur l'application",1);
+    public static final Role ROLE_CREATEUR = new Role(ID_ROLE_CREATEUR, "createur", "Rôle permettant de créer de nouveaux tournois",1);
+    public static final Role ROLE_JOUEUR = new Role(ID_ROLE_JOUEUR, "joueur", "Rôle de base de toute personne connectée sur le site",1);
+    public static final Role ROLE_GESTIONNAIRE = new Role(ID_ROLE_GESTIONNAIRE, "gestionnaire", "Rôle permettant de gérer un tournoi",2);
+    public static final Role ROLE_ARBITRE = new Role(ID_ROLE_ARBITRE, "arbitre", "Rôle permettant de gérer les rondes et les matchs d'un tournoi",2);
+
+    public static final List<Role> ALL_ROLES = List.of(
+        ROLE_ADMIN,
+        ROLE_CREATEUR,
+        ROLE_JOUEUR,
+        ROLE_GESTIONNAIRE,
+        ROLE_ARBITRE
+    );
     
     private int id;
     private String nom;
@@ -96,7 +116,7 @@ public class Role {
      * C'est pourquoi on a des méthodes statiques avec en paramètre l'identificateur.
      */
     public static boolean isAdmin(int idRole) {
-        return idRole == 1;
+        return idRole == ID_ROLE_ADMIN;
     }
 
     /**
@@ -104,7 +124,7 @@ public class Role {
      * C'est pourquoi on a des méthodes statiques avec en paramètre l'identificateur.
      */
     public static boolean isCreateur(int idRole) {
-        return isAdmin(idRole) || idRole == 2;
+        return isAdmin(idRole) || idRole == ID_ROLE_CREATEUR;
     }
 
     /**

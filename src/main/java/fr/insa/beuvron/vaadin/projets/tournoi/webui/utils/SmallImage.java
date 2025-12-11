@@ -1,7 +1,6 @@
 package fr.insa.beuvron.vaadin.projets.tournoi.webui.utils;
 
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 
 import com.vaadin.flow.component.html.Image;
 

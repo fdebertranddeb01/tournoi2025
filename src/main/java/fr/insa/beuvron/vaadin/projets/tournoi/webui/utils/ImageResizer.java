@@ -5,7 +5,6 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
-import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems.Breakpoint.Small;
 
 /** généré par chatGPT 5.0 */
 public class ImageResizer {

@@ -24,7 +24,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import fr.insa.beuvron.utils.database.ConnectionSimpleSGBD;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.Application;
 
 /**

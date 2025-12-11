@@ -19,6 +19,7 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.beuvron.vaadin.projets.tournoi.model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,43 +39,65 @@ public class Joueur extends ClasseMiroir {
     private String surnom;
     private String pass;
     private int idRole;
+    private String sexe;
+    private Date dateNaissance;
     private byte[] photo;
     private String photoType;
 
     @Override
     public String toString() {
-        return "Joueur{" + "surnom=" + getSurnom() + ", idRole=" + getIdRole() + '}';
+        return "Joueur{" + getSurnom() + " (sexe : " + sexe
+                + ") " + dateNaissance + " (idRole=" + getIdRole() + ")}";
     }
 
-    public Joueur(String surnom, String pass, int idRole, byte[] photo, String photoType) {
+    public Joueur(int id, String surnom, String pass, String sexe, Date dateNaissance, int idRole, byte[] photo,
+            String photoType) {
+        super(id);
         this.surnom = surnom;
         this.pass = pass;
+        this.sexe = sexe;
+        this.dateNaissance = dateNaissance;
         this.idRole = idRole;
         this.photo = photo;
         this.photoType = photoType;
     }
 
+    public Joueur(String surnom, String pass, String sexe, Date dateNaissance, int idRole, byte[] photo,
+            String photoType) {
+        this(-1, surnom, pass, sexe, dateNaissance, idRole, photo, photoType);
+    }
+
     @Override
     protected PreparedStatement saveSansId(Connection con) throws SQLException {
         PreparedStatement insert = con.prepareStatement(
-                "insert into joueur (surnom,pass,idrole,photo,phototype) values (?,?,?,?,?)",
+                "insert into joueur ("+ allFiedsNotId() +") values (?,?,?,?,?,?,?)",
                 PreparedStatement.RETURN_GENERATED_KEYS);
-        insert.setString(1, this.getSurnom());
-        insert.setString(2, this.getPass());
-        insert.setInt(3, this.getIdRole());
-        insert.setBlob(4, this.photo == null ? null : new java.io.ByteArrayInputStream(this.photo));
-        insert.setString(5, this.photoType);
+                int i = 1;
+        insert.setString(i++, this.getSurnom());
+        insert.setString(i++, this.getPass());
+        insert.setString(i++, this.sexe);
+        insert.setDate(i++, this.dateNaissance);
+        insert.setInt(i++, this.getIdRole());
+        insert.setBlob(i++, this.photo == null ? null : new java.io.ByteArrayInputStream(this.photo));
+        insert.setString(i++, this.photoType);
         return insert;
     }
 
+    private static String allFiedsNotId() {
+        return "surnom, pass,sexe,datenaissance, idrole, photo, phototype";
+    }
+
     private static String allFieds() {
-        return "surnom, pass, idrole, photo, phototype";
+        return "id," + allFiedsNotId();
     }
 
     private static Joueur fromCurLine(ResultSet rs) throws SQLException {
         return new Joueur(
+                rs.getInt("id"),
                 rs.getString("surnom"),
                 rs.getString("pass"),
+                rs.getString("sexe"),
+                rs.getDate("datenaissance"),
                 rs.getInt("idrole"),
                 rs.getBytes("photo"),
                 rs.getString("phototype"));
@@ -133,6 +156,34 @@ public class Joueur extends ClasseMiroir {
      */
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    /**
+     * @return the sexe
+     */
+    public String getSexe() {
+        return sexe;
+    }
+
+    /**
+     * @param sexe the sexe to set
+     */
+    public void setSexe(String sexe) {
+        this.sexe = sexe;
+    }
+
+    /**
+     * @return the dateNaissance
+     */
+    public Date getDateNaissance() {
+        return dateNaissance;
+    }
+
+    /**
+     * @param dateNaissance the dateNaissance to set
+     */
+    public void setDateNaissance(Date dateNaissance) {
+        this.dateNaissance = dateNaissance;
     }
 
     /**

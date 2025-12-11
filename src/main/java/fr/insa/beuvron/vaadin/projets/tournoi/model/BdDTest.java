@@ -22,7 +22,9 @@ import fr.insa.beuvron.utils.database.ConnectionSimpleSGBD;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.SmallImage;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -32,11 +34,12 @@ public class BdDTest {
 
   public static void createBdDTest(Connection con) throws SQLException {
     SmallImage content = SmallImage.PETIT_SMILEY_CONTENT_PNG;
+    SmallImage pasContent = SmallImage.PETIT_SMILEY_PAS_CONTENT_PNG;
     List<Joueur> users =
         List.of(
-            new Joueur("toto", "p1", 1, null, null),
-            new Joueur("titi", "p2", 2, null, null),
-            new Joueur("tutu", "p3", 3, null, null));
+            new Joueur("toto", "p1","M",Date.valueOf(LocalDate.of(2001, 2, 3)), 1, content.getImageData(), content.getImageType()),
+            new Joueur("titi", "p2",null,null, 2, null, null),
+            new Joueur("tutu", "p3","F",Date.valueOf(LocalDate.of(1990, 1, 2)), 3, pasContent.getImageData(), pasContent.getImageType()));
     for (var u : users) {
       u.saveInDB(con);
     }

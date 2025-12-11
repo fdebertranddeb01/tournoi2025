@@ -1,8 +1,7 @@
 package fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur;
 
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
@@ -38,5 +37,6 @@ public class JoueurMiniPanel extends HorizontalLayout {
       vaadImage.add(VaadinIcon.BAN.create());
     }
     this.add(vaadImage);
+    this.add(new H3(joueur.getSurnom()));
   }
 }

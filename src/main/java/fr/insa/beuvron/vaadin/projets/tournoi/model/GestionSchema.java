@@ -19,8 +19,9 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.beuvron.vaadin.projets.tournoi.model;
 
 import fr.insa.beuvron.utils.database.ConnectionSimpleSGBD;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.SmallImage;
+
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -55,6 +56,8 @@ public class GestionSchema {
                 + " surnom varchar(30) not null unique,"
                 + " pass varchar(20) not null,"
                 + " idrole integer not null,"
+                + " sexe char(1),"
+                + " datenaissance date,"
                 + " photo blob,"
                 + " phototype varchar(20)"
                 + ") ");
@@ -96,26 +99,19 @@ public class GestionSchema {
 
   public static void createBdDVide(Connection con) throws SQLException {
     GeneralParams.initDefaultGeneralParams(con);
-    List<Role> roles =
-        List.of(
-            new Role(1, "admin", "tous les droits sur l'ensemble de l'application", 1),
-            new Role(
-                2,
-                "createur",
-                "droit de créer un nouveau tournoi ; devient gestionnaire de ce tournoi",
-                1),
-            new Role(3, "joueur", "rôle de base des utilisateurs connectés", 1));
-    for (var r : roles) {
+    for (var r : Role.ALL_ROLES) {
       r.saveInDB(con);
     }
-    List<Joueur> joueurs =
-        List.of(
-            new Joueur(
-                "admin",
-                "admin",
-                1,
-                DefaultPhoto.getPhotoBytes(DefaultPhoto.PETIT_SMILEY_CONTENT_BASE64_PNG),
-                DefaultPhoto.PNG_TYPE));
+    SmallImage content = SmallImage.PETIT_SMILEY_CONTENT_PNG;
+    List<Joueur> joueurs = List.of(
+        new Joueur(
+            "admin",
+            "admin",
+            null,
+            null,
+            1,
+            content.getImageData(),
+            content.getImageType()));
     for (var u : joueurs) {
       u.saveInDB(con);
     }

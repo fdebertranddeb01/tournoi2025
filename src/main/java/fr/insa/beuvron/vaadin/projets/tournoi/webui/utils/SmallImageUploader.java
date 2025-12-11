@@ -36,7 +36,7 @@ public class SmallImageUploader extends Upload {
         UploadHandler.inMemory(
             (UploadMetadata metadata, byte[] data) -> {
               // Get other information about the file.
-              String fileName = metadata.fileName();
+              // String fileName = metadata.fileName();
               String type = metadata.contentType().trim();
               long contentLength = metadata.contentLength();
               if (!type.equals("image/png")

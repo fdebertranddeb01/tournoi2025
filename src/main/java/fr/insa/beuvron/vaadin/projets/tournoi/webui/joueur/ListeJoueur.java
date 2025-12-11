@@ -10,8 +10,9 @@ import com.vaadin.flow.router.Route;
 
 import fr.insa.beuvron.utils.database.ConnectionPool;
 import fr.insa.beuvron.vaadin.projets.tournoi.model.Joueur;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.MainLayout;
 
-@Route("joueurs/liste")
+@Route(value = "joueur/liste", layout = MainLayout.class)
 public class ListeJoueur extends VerticalLayout {
 
     public ListeJoueur() {
@@ -23,7 +24,9 @@ public class ListeJoueur extends VerticalLayout {
             Notification.show("Erreur lors du chargement de la liste des joueurs : " + e, 5000,
                     Notification.Position.MIDDLE);
         }
+        // grid.removeAllColumns();
         grid.addComponentColumn(j -> new JoueurMiniPanel(j)).setHeader("Joueur");
+        this.add(grid);
     }
 
 }

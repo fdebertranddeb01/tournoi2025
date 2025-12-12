@@ -67,6 +67,10 @@ public class Joueur extends ClasseMiroir {
         this(-1, surnom, pass, sexe, dateNaissance, idRole, photo, photoType);
     }
 
+    public static Joueur nouveauJoueur() {
+        return new Joueur(-1, "", "", null,null, Role.ID_ROLE_JOUEUR, null, null);
+    }
+
     @Override
     protected PreparedStatement saveSansId(Connection con) throws SQLException {
         PreparedStatement insert = con.prepareStatement(

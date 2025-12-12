@@ -62,6 +62,31 @@ public class SmallImageWithUploader extends HorizontalLayout {
     this.add(this.imagePlace, this.uploader);
   }
 
+  public void setCurImage(SmallImage img) {
+    this.curImage = img;
+    if (img != null) {
+      try {
+        this.curImageResized = this.curImage.resizeToPNG(this.imgWidthInPixel, this.imgHeightInPixel);
+      } catch (Exception e) {
+        this.noImage();
+      }
+      Image vaadinImg = this.curImageResized.toVaadinImage("Problem affichage image");
+      this.imagePlace.removeAll();
+      this.imagePlace.add(vaadinImg);
+    } else {
+      this.noImage();
+    }
+  }
+
+  private void noImage() {
+    this.imagePlace.removeAll();
+    Icon icon = VaadinIcon.BAN.create();
+    icon.setSize(this.imgWidthInPixel + "px");
+    this.imagePlace.add(icon);
+    this.curImage = null;
+    this.curImageResized = null;
+  }
+
   public void changeImage() {
     this.imagePlace.removeAll();
     byte[] imgData = this.uploader.getImageData();
@@ -73,14 +98,11 @@ public class SmallImageWithUploader extends HorizontalLayout {
     } else {
       try {
         this.curImage = new SmallImage(imgData, this.uploader.getImageType());
-        this.curImageResized= this.curImage.resizeToPNG(this.imgWidthInPixel, this.imgHeightInPixel);
+        this.curImageResized = this.curImage.resizeToPNG(this.imgWidthInPixel, this.imgHeightInPixel);
         Image img = this.curImageResized.toVaadinImage("Problem affichage image");
         this.imagePlace.add(img);
       } catch (Exception e) {
-        Paragraph errorPara = new Paragraph("image invalide");
-        this.imagePlace.add(errorPara);
-        this.curImage = null;
-        this.curImageResized = null;
+        this.noImage();
       }
 
     }

@@ -17,14 +17,13 @@ public class ListeJoueur extends VerticalLayout {
 
     public ListeJoueur() {
         this.add(new H2("Liste des joueurs"));
-        Grid<Joueur> grid = new Grid<>(Joueur.class);
+        Grid<Joueur> grid = new Grid<>(Joueur.class,false);
         try (Connection con = ConnectionPool.getConnection()) {
             grid.setItems(Joueur.getAllJoueurs(con));
         } catch (Exception e) {
             Notification.show("Erreur lors du chargement de la liste des joueurs : " + e, 5000,
                     Notification.Position.MIDDLE);
         }
-        // grid.removeAllColumns();
         grid.addComponentColumn(j -> new JoueurMiniPanel(j)).setHeader("Joueur");
         this.add(grid);
     }

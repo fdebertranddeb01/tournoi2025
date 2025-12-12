@@ -18,83 +18,116 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
 package fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur;
 
-import java.sql.Connection;
 import java.sql.Date;
 import java.util.Optional;
 
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.Route;
 
-import fr.insa.beuvron.utils.database.ConnectionPool;
 import fr.insa.beuvron.vaadin.projets.tournoi.model.GeneralParams;
 import fr.insa.beuvron.vaadin.projets.tournoi.model.Joueur;
 import fr.insa.beuvron.vaadin.projets.tournoi.model.Role;
-import fr.insa.beuvron.vaadin.projets.tournoi.webui.MainLayout;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.MyIntegerField;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.SmallImage;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.SmallImageWithUploader;
 
 /**
  * @author fdebertranddeb01
  */
-@Route(value ="joueur/inscription", layout = MainLayout.class)
-public class InscriptionForm extends FormLayout {
+public class JoueurForm extends FormLayout {
 
+  private MyIntegerField tfID;
   private TextField tfSurnom;
   private PasswordField pfPass;
   private PasswordField pfAgain;
   private ComboBox<String> cbSexe;
   private DatePicker dpDateNaissance;
   private SmallImageWithUploader imgUploader;
-  private Button btnSubmit;
+  private ComboBox<Role> cbRole;
 
-  public InscriptionForm() {
-    this.tfSurnom = new TextField("surnom : ");
-    this.pfPass = new PasswordField("pass : ");
-    this.pfAgain = new PasswordField("pass (confirm) : ");
-    this.cbSexe = new ComboBox<>("sexe : ");
-    this.cbSexe.setItems("M","F","Autre");
-    this.dpDateNaissance = new DatePicker("date de naissance : ");
+  private boolean forAdmin = false;
+  private Joueur joueurEnCours = null;
+
+  public JoueurForm(Joueur joueurEnCours, boolean forAdmin) {
+    this.joueurEnCours = joueurEnCours;
+    this.forAdmin = forAdmin;
+    // sur une seule colonne
+    this.setResponsiveSteps(new ResponsiveStep("0", 1));
+    this.tfID = new MyIntegerField("ID");
+    this.tfID.setReadOnly(true);
+    this.tfSurnom = new TextField();
+    this.pfPass = new PasswordField();
+    this.pfAgain = new PasswordField();
+    this.cbSexe = new ComboBox<>();
+    this.cbSexe.setItems("M", "F", "Autre");
+    this.dpDateNaissance = new DatePicker();
     // rendre les champs obligatoires visuellement
     this.tfSurnom.setRequiredIndicatorVisible(true);
     this.pfPass.setRequiredIndicatorVisible(true);
     this.pfAgain.setRequiredIndicatorVisible(true);
     // effacer l'état d'erreur quand l'utilisateur modifie les champs
     this.tfSurnom.addValueChangeListener(e -> {
-      this.tfSurnom.setInvalid(false);
-      this.tfSurnom.setErrorMessage((String) null);
+      this.testValidity();
     });
     this.pfPass.addValueChangeListener(e -> {
-      this.pfPass.setInvalid(false);
-      this.pfPass.setErrorMessage((String) null);
-      this.pfAgain.setInvalid(false);
-      this.pfAgain.setErrorMessage((String) null);
+      this.testValidity();
     });
     this.pfAgain.addValueChangeListener(e -> {
-      this.pfPass.setInvalid(false);
-      this.pfPass.setErrorMessage((String) null);
-      this.pfAgain.setInvalid(false);
-      this.pfAgain.setErrorMessage((String) null);
+      this.testValidity();
     });
     int width = GeneralParams.widthOfPhotoInJoueurPanel;
     int height = GeneralParams.heightOfPhotoInJoueurPanel;
     int maxsize = GeneralParams.maxSizePhotoFileInKo;
     this.imgUploader = new SmallImageWithUploader(maxsize * 1024, width, height);
-    this.btnSubmit = new Button("S'inscrire");
-    this.btnSubmit.addClickListener(e -> {
-      this.createJoueur();
-    });
-    this.add(this.tfSurnom, this.pfPass, this.pfAgain,this.cbSexe,this.dpDateNaissance, this.imgUploader, this.btnSubmit);
-
+    this.cbRole = new ComboBox<>("Rôle");
+    this.cbRole.setItemLabelGenerator(r -> r.getNom());
+    this.cbRole.setItems(Role.ALL_ROLES_GENERAUX);
+    this.cbRole.setRequiredIndicatorVisible(true);
+    if (this.forAdmin) {
+      this.addFormItem(this.tfID, "ID : ");
+    }
+    this.addFormItem(this.tfSurnom, "surnom : ");
+    this.addFormItem(this.pfPass, "mot de passe : ");
+    this.addFormItem(this.pfAgain, "mot de passe (confirmation) : ");
+    this.addFormItem(this.cbSexe, "sexe : ");
+    this.addFormItem(this.dpDateNaissance, "date de naissance : ");
+    if (this.forAdmin) {
+      this.addFormItem(this.cbRole, "rôle : ");
+    }
+    this.addFormItem(this.imgUploader, "photo : ");
+    this.updateViewFromJoueur();
   }
 
-  public void createJoueur() {
+  public void setJoueurEnCours(Joueur joueurEnCours) {
+    this.joueurEnCours = joueurEnCours;
+    this.updateViewFromJoueur();
+  }
+
+  public void updateViewFromJoueur() {
+    if (this.joueurEnCours != null) {
+      this.tfID.setValue(Integer.toString(this.joueurEnCours.getId()));
+      this.tfSurnom.setValue(this.joueurEnCours.getSurnom());
+      this.cbSexe.setValue(this.joueurEnCours.getSexe());
+      if (this.joueurEnCours.getDateNaissance() != null) {
+        this.dpDateNaissance.setValue(this.joueurEnCours.getDateNaissance().toLocalDate());
+      }
+      Optional<Role> roleOpt = Role.ALL_ROLES_GENERAUX.stream()
+          .filter(r -> r.getId() == this.joueurEnCours.getIdRole())
+          .findFirst();
+      roleOpt.ifPresent(r -> this.cbRole.setValue(r));
+      if (this.joueurEnCours.getPhoto() != null) {
+        SmallImage img = new SmallImage(this.joueurEnCours.getPhoto(), this.joueurEnCours.getPhotoType());
+        this.imgUploader.setCurImage(img);
+      } else {
+        this.imgUploader.setCurImage(null);
+      }
+    }
+  }
+
+  public boolean testValidity() {
     // clear previous error states
     this.tfSurnom.setInvalid(false);
     this.tfSurnom.setErrorMessage((String) null);
@@ -106,36 +139,47 @@ public class InscriptionForm extends FormLayout {
     String surnom = this.tfSurnom.getValue() == null ? "" : this.tfSurnom.getValue().trim();
     String pass = this.pfPass.getValue() == null ? "" : this.pfPass.getValue();
     String passAgain = this.pfAgain.getValue() == null ? "" : this.pfAgain.getValue();
-
+    boolean valid = true;
     if (surnom.isEmpty()) {
       this.tfSurnom.setInvalid(true);
       this.tfSurnom.setErrorMessage("Le surnom est requis");
-      this.tfSurnom.focus();
-      return;
+      valid = false;
     }
     if (pass.isEmpty()) {
       this.pfPass.setInvalid(true);
       this.pfPass.setErrorMessage("Le mot de passe est requis");
-      this.pfPass.focus();
-      return;
+      valid = false;
     }
     if (passAgain.isEmpty()) {
       this.pfAgain.setInvalid(true);
       this.pfAgain.setErrorMessage("La confirmation du mot de passe est requise");
-      this.pfAgain.focus();
-      return;
+      valid = false;
     }
     if (!pass.equals(passAgain)) {
       this.pfPass.setInvalid(true);
       this.pfPass.setErrorMessage("Les mots de passe ne correspondent pas");
       this.pfAgain.setInvalid(true);
       this.pfAgain.setErrorMessage("Les mots de passe ne correspondent pas");
-      this.pfAgain.focus();
-      return;
+      valid = false;
     }
+    if (this.cbRole.getValue() == null) {
+      this.cbRole.setInvalid(true);
+      this.cbRole.setErrorMessage("Le rôle est requis");
+      valid = false;
+    }
+    return valid;
+  }
+
+  public boolean updateModelFromView() {
+    if (!this.testValidity()) {
+      return false;
+    }
+    String surnom = this.tfSurnom.getValue() == null ? "" : this.tfSurnom.getValue().trim();
+    String pass = this.pfPass.getValue() == null ? "" : this.pfPass.getValue();
+    String passAgain = this.pfAgain.getValue() == null ? "" : this.pfAgain.getValue();
 
     String sexe = this.cbSexe.getValue();
-    if (sexe == null || ! (sexe.equalsIgnoreCase("M")) || sexe.equalsIgnoreCase("F")) {
+    if (sexe == null || !(sexe.equalsIgnoreCase("M")) || sexe.equalsIgnoreCase("F")) {
       sexe = null;
     }
 
@@ -150,15 +194,19 @@ public class InscriptionForm extends FormLayout {
       imgData = imgOpt.get().getImageData();
       imgType = imgOpt.get().getImageType();
     }
-    // le nouveau joueur est toujours un joueur simple
-    // un admin pourra le promouvoir plus tard s'il le souhaite
-    Joueur nouveauJoueur = new Joueur(surnom, pass,sexe,naissance, Role.ID_ROLE_JOUEUR, imgData, imgType);
-    try (Connection con = ConnectionPool.getConnection()) {
-      nouveauJoueur.saveInDB(con);
-      Notification.show("Inscription " + nouveauJoueur.getSurnom() + " : OK", 2500, Position.MIDDLE);
-    } catch (Exception e) {
-      Notification.show("Erreur lors de l'inscription : " + e.getMessage(), 5000, Position.MIDDLE);
-      return;
+    this.joueurEnCours.setSurnom(surnom);
+    this.joueurEnCours.setPass(pass);
+    if (this.cbRole.getValue() != null) {
+      this.joueurEnCours.setIdRole(this.cbRole.getValue().getId());
+    } else {
+      this.joueurEnCours.setIdRole(Role.ID_ROLE_JOUEUR);
     }
+    this.joueurEnCours.setIdRole(this.cbRole.getValue().getId());
+    this.joueurEnCours.setSexe(sexe);
+    this.joueurEnCours.setDateNaissance(naissance);
+    this.joueurEnCours.setPhoto(imgData);
+    this.joueurEnCours.setPhotoType(imgType);
+    return true;
+
   }
 }

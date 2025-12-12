@@ -77,6 +77,12 @@ public class Role {
         ROLE_GESTIONNAIRE,
         ROLE_ARBITRE
     );
+
+    public static final List<Role> ALL_ROLES_GENERAUX = List.of(
+        ROLE_ADMIN,
+        ROLE_CREATEUR,
+        ROLE_JOUEUR
+    );
     
     private int id;
     private String nom;

@@ -70,13 +70,47 @@ public class JoueurForm extends FormLayout {
     this.pfAgain.setRequiredIndicatorVisible(true);
     // effacer l'état d'erreur quand l'utilisateur modifie les champs
     this.tfSurnom.addValueChangeListener(e -> {
-      this.testValidity();
+      String surnom = this.tfSurnom.getValue() == null ? "" : this.tfSurnom.getValue().trim();
+      if (surnom.isEmpty()) {
+        this.tfSurnom.setInvalid(true);
+        this.tfSurnom.setErrorMessage("Le surnom est requis");
+      } else if (surnom.length() > 30) {
+        this.tfSurnom.setInvalid(true);
+        this.tfSurnom.setErrorMessage("Le surnom ne doit pas dépasser 30 caractères");
+      } else {
+        this.tfSurnom.setInvalid(false);
+        this.tfSurnom.setErrorMessage((String) null);
+      }
     });
     this.pfPass.addValueChangeListener(e -> {
-      this.testValidity();
+      if (this.pfPass.getValue() == null || this.pfPass.getValue().isEmpty()) {
+        this.pfPass.setInvalid(true);
+        this.pfPass.setErrorMessage("Le mot de passe est requis");
+      } else if (this.pfPass.getValue().length() > 30) {
+        this.pfAgain.setInvalid(true);
+        this.pfAgain.setErrorMessage("Le mot de passe ne doit pas dépasser 30 caractères");
+      } else {
+        this.pfPass.setInvalid(false);
+        this.pfPass.setErrorMessage((String) null);
+      }
     });
     this.pfAgain.addValueChangeListener(e -> {
-      this.testValidity();
+      if (this.pfAgain.getValue() == null || this.pfAgain.getValue().isEmpty()) {
+        this.pfAgain.setInvalid(true);
+        this.pfAgain.setErrorMessage("La confirmation du mot de passe est requise");
+      } else if (this.pfAgain.getValue().length() > 30) {
+        this.pfAgain.setInvalid(true);
+        this.pfAgain.setErrorMessage("Le mot de passe ne doit pas dépasser 30 caractères");
+      } else if (this.pfPass.getValue() != null
+          && !this.pfAgain.getValue().equals(this.pfPass.getValue())) {
+        this.pfPass.setInvalid(true);
+        this.pfPass.setErrorMessage("Les mots de passe ne correspondent pas");
+        this.pfAgain.setInvalid(true);
+        this.pfAgain.setErrorMessage("Les mots de passe ne correspondent pas");
+      } else {
+        this.pfAgain.setInvalid(false);
+        this.pfAgain.setErrorMessage((String) null);
+      }
     });
     int width = GeneralParams.widthOfPhotoInJoueurPanel;
     int height = GeneralParams.heightOfPhotoInJoueurPanel;
@@ -145,14 +179,29 @@ public class JoueurForm extends FormLayout {
       this.tfSurnom.setErrorMessage("Le surnom est requis");
       valid = false;
     }
+    if (surnom.length() > 30) {
+      this.tfSurnom.setInvalid(true);
+      this.tfSurnom.setErrorMessage("Le surnom ne doit pas dépasser 30 caractères");
+      valid = false;
+    }
     if (pass.isEmpty()) {
       this.pfPass.setInvalid(true);
       this.pfPass.setErrorMessage("Le mot de passe est requis");
       valid = false;
     }
+    if (pass.length() > 30) {
+      this.pfPass.setInvalid(true);
+      this.pfPass.setErrorMessage("Le mot de passe ne doit pas dépasser 30 caractères");
+      valid = false;
+    }
     if (passAgain.isEmpty()) {
       this.pfAgain.setInvalid(true);
       this.pfAgain.setErrorMessage("La confirmation du mot de passe est requise");
+      valid = false;
+    }
+    if (passAgain.length() > 30) {
+      this.pfAgain.setInvalid(true);
+      this.pfAgain.setErrorMessage("Le mot de passe ne doit pas dépasser 30 caractères");
       valid = false;
     }
     if (!pass.equals(passAgain)) {
@@ -176,7 +225,6 @@ public class JoueurForm extends FormLayout {
     }
     String surnom = this.tfSurnom.getValue() == null ? "" : this.tfSurnom.getValue().trim();
     String pass = this.pfPass.getValue() == null ? "" : this.pfPass.getValue();
-    String passAgain = this.pfAgain.getValue() == null ? "" : this.pfAgain.getValue();
 
     String sexe = this.cbSexe.getValue();
     if (sexe == null || !(sexe.equalsIgnoreCase("M")) || sexe.equalsIgnoreCase("F")) {

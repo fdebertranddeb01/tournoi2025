@@ -54,7 +54,7 @@ public class GestionSchema {
                 + ConnectionSimpleSGBD.sqlForGeneratedKeys(con, "id")
                 + ","
                 + " surnom varchar(30) not null unique,"
-                + " pass varchar(20) not null,"
+                + " pass varchar(30) not null,"
                 + " idrole integer not null,"
                 + " sexe char(1),"
                 + " datenaissance date,"

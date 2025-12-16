@@ -135,6 +135,10 @@ public class JoueurForm extends FormLayout {
     this.updateViewFromJoueur();
   }
 
+  public Joueur getJoueurEnCours() {
+    return this.joueurEnCours;
+  }
+
   public void setJoueurEnCours(Joueur joueurEnCours) {
     this.joueurEnCours = joueurEnCours;
     this.updateViewFromJoueur();
@@ -144,6 +148,8 @@ public class JoueurForm extends FormLayout {
     if (this.joueurEnCours != null) {
       this.tfID.setValue(Integer.toString(this.joueurEnCours.getId()));
       this.tfSurnom.setValue(this.joueurEnCours.getSurnom());
+      this.pfPass.setValue(this.joueurEnCours.getPass());
+      this.pfAgain.setValue(this.joueurEnCours.getPass());
       this.cbSexe.setValue(this.joueurEnCours.getSexe());
       if (this.joueurEnCours.getDateNaissance() != null) {
         this.dpDateNaissance.setValue(this.joueurEnCours.getDateNaissance().toLocalDate());

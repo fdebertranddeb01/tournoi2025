@@ -99,11 +99,11 @@ public class EditGeneralParams extends FormLayout implements OnlyAdmin {
 			try (Connection con = ConnectionPool.getConnection()) {
 				GeneralParams.saveGeneralParams(con);
 			}
-			Utils.outErrorAsNotification("Paramètres sauvegardés avec succès.");
+			Utils.outSuccess("Paramètres sauvegardés avec succès.");
 		} catch (NumberFormatException ex) {
-			Utils.outErrorAsNotification("Valeur entière attendue : " + ex.getMessage());
+			Utils.outError("Valeur entière attendue : " + ex.getMessage());
 		} catch (SQLException ex) {
-			Utils.outErrorAsNotification("Erreur de sauvegarde : " + ex.getLocalizedMessage());
+			Utils.outError("Erreur de sauvegarde : " + ex.getLocalizedMessage());
 		}
 	}
 
@@ -111,9 +111,9 @@ public class EditGeneralParams extends FormLayout implements OnlyAdmin {
 		try (Connection con = ConnectionPool.getConnection()) {
 			GeneralParams.loadGeneralParams(con);
 			this.fillFieldsFromModel();
-			Utils.outErrorAsNotification("Paramètres rechargés depuis la base.");
+			Utils.outError("Paramètres rechargés depuis la base.");
 		} catch (SQLException ex) {
-			Utils.outErrorAsNotification("Erreur de lecture depuis la base : " + ex.getLocalizedMessage());
+			Utils.outError("Erreur de lecture depuis la base : " + ex.getLocalizedMessage());
 		}
 	}
 

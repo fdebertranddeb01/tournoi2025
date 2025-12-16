@@ -42,12 +42,12 @@ public class SmallImageUploader extends Upload {
               if (!type.equals("image/png")
                   && !type.equals("image/jpeg")
                   && !type.equals("image/jpg")) {
-                Utils.outErrorAsNotification(
+                Utils.outError(
                     "type de fichier invalide : \""
                         + type
                         + "\"\ndevrait être \"image/png\", \"image/jpeg\", ou \"image/jpg\"");
               } else if (contentLength > maxFileSize) {
-                Utils.outErrorAsNotification("fichier trop volumineux");
+                Utils.outError("fichier trop volumineux");
               } else {
                 this.imageType = metadata.contentType();
                 this.imageData = data;
@@ -59,7 +59,7 @@ public class SmallImageUploader extends Upload {
     this.setMaxFileSize(maxFileSize);
     this.addFileRejectedListener(
         (t) -> {
-          Utils.outErrorAsNotification(
+          Utils.outError(
               "fichier trop volumineux : taille max : "
                   + maxFileSize
                   + "o (~ "

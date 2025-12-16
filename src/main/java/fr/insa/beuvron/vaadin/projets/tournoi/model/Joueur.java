@@ -87,6 +87,32 @@ public class Joueur extends ClasseMiroir {
         return insert;
     }
 
+    public void updateSaufID(Connection con) throws SQLException {
+        try (PreparedStatement update = con.prepareStatement(
+                "update joueur set "
+                        + "surnom=?, pass=?, sexe=?, datenaissance=?, idrole=?, photo=?, phototype=? "
+                        + "where id=?")) {
+            int i = 1;
+            update.setString(i++, this.getSurnom());
+            update.setString(i++, this.getPass());
+            update.setString(i++, this.sexe);
+            update.setDate(i++, this.dateNaissance);
+            update.setInt(i++, this.getIdRole());
+            update.setBlob(i++, this.photo == null ? null : new java.io.ByteArrayInputStream(this.photo));
+            update.setString(i++, this.photoType);
+            update.setInt(i++, this.getId());
+            update.executeUpdate();
+        }
+    }
+
+    public void delete(Connection con) throws SQLException {
+        try (PreparedStatement delete = con.prepareStatement(
+                "delete from joueur where id=?")) {
+            delete.setInt(1, this.getId());
+            delete.executeUpdate();
+        }
+    }
+
     private static String allFiedsNotId() {
         return "surnom, pass,sexe,datenaissance, idrole, photo, phototype";
     }

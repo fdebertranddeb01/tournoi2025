@@ -8,6 +8,9 @@
 *.iml
 .DS_Store
 
+# pour l'éventuelle base de données H2 en mode fichier
+data/
+
 # The following files are generated/updated by vaadin-maven-plugin
 node_modules/
 src/main/frontend/generated/

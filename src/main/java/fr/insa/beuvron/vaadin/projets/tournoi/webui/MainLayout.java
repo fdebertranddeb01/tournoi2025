@@ -52,7 +52,7 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         this.curLogout = new LogoutEntete();
         this.addToNavbar(this.curLogout);
       } catch (SQLException ex) {
-        Utils.outErrorAsNotification("Problème interne : " + ex.getLocalizedMessage());
+        Utils.outError("Problème interne : " + ex.getLocalizedMessage());
         this.curLogin = new LoginEntete();
         this.addToNavbar(this.curLogin);
       }

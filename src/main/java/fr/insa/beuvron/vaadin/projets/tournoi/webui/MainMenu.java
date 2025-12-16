@@ -22,7 +22,9 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.admin.EditGeneralParams;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.admin.RAZBdDPannel;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur.InscriptionJoueur;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur.JoueurBrowser;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur.ListeJoueur;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.tests.TestIntegerTextField;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.tests.TestSmallImageLoader;
@@ -40,7 +42,9 @@ public class MainMenu extends SideNav {
     joueurs.addItem(listeJoueurs, inscriptionJoueurs);
     SideNavItem admin = new SideNavItem("admin");
     SideNavItem editParams = new SideNavItem("edit params", EditGeneralParams.class);
-    admin.addItem(editParams);
+    SideNavItem browseJoueurs = new SideNavItem("browse joueurs", JoueurBrowser.class);
+    SideNavItem razBdd = new SideNavItem("RAZ BDD", RAZBdDPannel.class);
+    admin.addItem(editParams, browseJoueurs, razBdd);
     SideNavItem tests = new SideNavItem("tests");
     SideNavItem testupload = new SideNavItem("upload image", TestSmallImageLoader.class);
     SideNavItem testIField = new SideNavItem("Integer field", TestIntegerTextField.class);

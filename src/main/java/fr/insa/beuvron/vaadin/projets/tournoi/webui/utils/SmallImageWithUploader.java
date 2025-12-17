@@ -18,19 +18,23 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
 package fr.insa.beuvron.vaadin.projets.tournoi.webui.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.shared.Registration;
 
 /**
  * @author fdebertranddeb01
  */
-public class SmallImageWithUploader extends HorizontalLayout {
+public class SmallImageWithUploader extends HorizontalLayout
+    implements HasValue<HasValue.ValueChangeEvent<SmallImage>, SmallImage> {
 
   private SmallImageUploader uploader;
   private Div imagePlace;
@@ -118,6 +122,49 @@ public class SmallImageWithUploader extends HorizontalLayout {
 
   public Optional<SmallImage> getCurrentResizedImage() {
     return Optional.ofNullable(this.curImageResized);
+  }
+
+  private List<ValueChangeListener<? super ValueChangeEvent<SmallImage>>> listeners = new ArrayList<>();
+
+  @Override
+  public Registration addValueChangeListener(ValueChangeListener<? super ValueChangeEvent<SmallImage>> listener) {
+    this.listeners.add(listener);
+    return () -> this.listeners.remove(listener);
+  }
+
+  @Override
+  public SmallImage getValue() {
+    return this.curImage;
+  }
+
+  private boolean readOnly = false;
+
+  @Override
+  public boolean isReadOnly() {
+    return this.readOnly;
+  }
+
+  private boolean requiredIndicatorVisible = false;
+
+  @Override
+  public boolean isRequiredIndicatorVisible() {
+    return this.requiredIndicatorVisible;
+  }
+
+  @Override
+  public void setReadOnly(boolean readOnly) {
+    this.readOnly = readOnly;
+    this.uploader.setEnabled(!readOnly);
+  }
+
+  @Override
+  public void setRequiredIndicatorVisible(boolean requiredIndicatorVisible) {
+    this.requiredIndicatorVisible = requiredIndicatorVisible;
+  }
+
+  @Override
+  public void setValue(SmallImage arg0) {
+    this.setCurImage(arg0);
   }
 
 }

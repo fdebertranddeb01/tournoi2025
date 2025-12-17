@@ -13,6 +13,15 @@ public enum SexeEnum {
         this.nom = nom;
     }
 
+    public static SexeEnum getByCode(String code) {
+        for (SexeEnum sexe : SexeEnum.values()) {
+            if (sexe.getCode() != null && sexe.getCode().equals(code)) {
+                return sexe;
+            }
+        }
+        return NON_SPECIFIE;
+    }
+
     public String getCode() {
         return code;
     }

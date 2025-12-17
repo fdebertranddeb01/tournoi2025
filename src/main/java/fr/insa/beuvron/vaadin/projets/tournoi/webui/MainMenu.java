@@ -27,6 +27,7 @@ import fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur.InscriptionJoueur;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur.JoueurBrowser;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur.ListeJoueur;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.tests.TestIntegerTextField;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.tests.TestJoueurFormWithBinder;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.tests.TestSVG;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.tests.TestSmallImageLoader;
 
@@ -47,10 +48,11 @@ public class MainMenu extends SideNav {
     SideNavItem razBdd = new SideNavItem("RAZ BDD", RAZBdDPannel.class);
     admin.addItem(editParams, browseJoueurs, razBdd);
     SideNavItem tests = new SideNavItem("tests");
+    SideNavItem testForm = new SideNavItem("joueur form binder", TestJoueurFormWithBinder.class);
     SideNavItem testupload = new SideNavItem("upload image", TestSmallImageLoader.class);
     SideNavItem testIField = new SideNavItem("Integer field", TestIntegerTextField.class);
     SideNavItem testSvg = new SideNavItem("SVG", TestSVG.class);
-    tests.addItem(testupload, testIField, testSvg);
+    tests.addItem(testForm,testupload, testIField, testSvg);
     this.addItem(accueil, joueurs,admin,tests);
   }
 }

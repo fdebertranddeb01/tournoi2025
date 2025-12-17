@@ -30,6 +30,10 @@ import java.util.Random;
 
 import fr.insa.beuvron.utils.database.ClasseMiroir;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.SmallImage;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 /**
  * Une petite classe "miroir" de la table des joueurs.
@@ -38,10 +42,16 @@ import fr.insa.beuvron.vaadin.projets.tournoi.webui.utils.SmallImage;
  */
 public class Joueur extends ClasseMiroir {
 
+    @NotBlank
+    @Size(min = 3,max = 30, message = "Le surnom doit faire entre 3 et 30 caractères")
     private String surnom;
+    @NotBlank
+    @Size(min = 6,max = 30, message = "Le mot de passe doit faire entre 6 et 30 caractères")
     private String pass;
     private int idRole;
+    @Pattern(regexp = "H|F", message = "Le sexe doit être 'H' (homme), 'F' (femme) ou vide (non défini)")
     private String sexe;
+    @Past(message = "La date de naissance doit être dans le passé")
     private Date dateNaissance;
     private byte[] photo;
     private String photoType;
@@ -232,6 +242,19 @@ public class Joueur extends ClasseMiroir {
         try (PreparedStatement req = con.prepareStatement(
                 "select " + allFieds() + " from joueur where id=?")) {
             req.setInt(1, idJoueur);
+            ResultSet res = req.executeQuery();
+            if (res.next()) {
+                return Optional.of(fromCurLine(res));
+            } else {
+                return Optional.empty();
+            }
+        }
+    }
+
+    public static Optional<Joueur> getBySurnom(Connection con, String surnom) throws SQLException {
+        try (PreparedStatement req = con.prepareStatement(
+                "select " + allFieds() + " from joueur where surnom=?")) {
+            req.setString(1, surnom);
             ResultSet res = req.executeQuery();
             if (res.next()) {
                 return Optional.of(fromCurLine(res));

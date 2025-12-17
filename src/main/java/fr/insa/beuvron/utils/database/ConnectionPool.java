@@ -43,25 +43,11 @@ public class ConnectionPool {
   // de la classe
 
   // pour une BdD en mémoire en utilisant le sgbd H2
-  // static {
-  //   config.setJdbcUrl("jdbc:h2:mem:pourCoursVaadin");
-  //   // peut être pas indispensable, mais dans le doute...
-  //   config.setUsername("inutilePourH2Mem");
-  //   config.setPassword("inutilePourH2Mem");
-  //   config.setMaximumPoolSize(10);
-  //   config.addDataSourceProperty("cachePrepStmts", "true");
-  //   config.addDataSourceProperty("prepStmtCacheSize", "250");
-  //   config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-  //   config.setTransactionIsolation("TRANSACTION_SERIALIZABLE");
-  //   ds = new HikariDataSource(config);
-  // }
-
-  // pour une BdD utilisant un fichier dans le sous-répertoire data du projet en utilisant le sgbd H2
   static {
-    config.setJdbcUrl("jdbc:h2:file:./data/db_tournoi2025");
+    config.setJdbcUrl("jdbc:h2:mem:pourCoursVaadin");
     // peut être pas indispensable, mais dans le doute...
-    config.setUsername("test");
-    config.setPassword("test");
+    config.setUsername("inutilePourH2Mem");
+    config.setPassword("inutilePourH2Mem");
     config.setMaximumPoolSize(10);
     config.addDataSourceProperty("cachePrepStmts", "true");
     config.addDataSourceProperty("prepStmtCacheSize", "250");
@@ -69,6 +55,20 @@ public class ConnectionPool {
     config.setTransactionIsolation("TRANSACTION_SERIALIZABLE");
     ds = new HikariDataSource(config);
   }
+
+  // pour une BdD utilisant un fichier dans le sous-répertoire data du projet en utilisant le sgbd H2
+  // static {
+  //   config.setJdbcUrl("jdbc:h2:file:./data/db_tournoi2025");
+  //   // peut être pas indispensable, mais dans le doute...
+  //   config.setUsername("test");
+  //   config.setPassword("test");
+  //   config.setMaximumPoolSize(10);
+  //   config.addDataSourceProperty("cachePrepStmts", "true");
+  //   config.addDataSourceProperty("prepStmtCacheSize", "250");
+  //   config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+  //   config.setTransactionIsolation("TRANSACTION_SERIALIZABLE");
+  //   ds = new HikariDataSource(config);
+  // }
 
   // pour une BdD en utilisant le sgbd mysql pour module M3
   //    static {

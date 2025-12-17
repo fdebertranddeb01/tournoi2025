@@ -53,6 +53,7 @@ public class JoueurBrowser extends SplitLayout implements OnlyAdmin {
 		grid.addColumn(Joueur::getSexe).setHeader("Sexe");
 		grid.addColumn(j -> j.getDateNaissance() == null ? "" : j.getDateNaissance().toString()).setHeader("Naissance");
 		grid.addColumn(Joueur::getIdRole).setHeader("Role");
+		grid.addColumn((Joueur j) -> j.getPhoto() == null ? "N" : "O").setHeader("Photo?");
 		grid.getColumns().forEach(col -> col.setAutoWidth(true));
 		this.setSplitterPosition(33);
 		// grid.setWidth("min-content");
@@ -86,7 +87,7 @@ public class JoueurBrowser extends SplitLayout implements OnlyAdmin {
 
 		// populate grid
 		refreshGrid();
-		this.enable(false);
+		this.enable(true);
 
 		this.addToPrimary(left);
 		this.addToSecondary(right);

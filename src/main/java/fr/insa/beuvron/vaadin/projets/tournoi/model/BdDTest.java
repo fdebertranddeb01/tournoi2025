@@ -26,6 +26,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author francois
@@ -35,12 +36,20 @@ public class BdDTest {
   public static void createBdDTest(Connection con) throws SQLException {
     SmallImage content = SmallImage.PETIT_SMILEY_CONTENT_PNG;
     SmallImage pasContent = SmallImage.PETIT_SMILEY_PAS_CONTENT_PNG;
-    List<Joueur> users =
-        List.of(
-            new Joueur("toto", "p1","M",Date.valueOf(LocalDate.of(2001, 2, 3)), 1, content.getImageData(), content.getImageType()),
-            new Joueur("titi", "p2",null,null, 2, null, null),
-            new Joueur("tutu", "p3","F",Date.valueOf(LocalDate.of(1990, 1, 2)), 3, pasContent.getImageData(), pasContent.getImageType()));
+    List<Joueur> users = List.of(
+        new Joueur("toto", "p1", "M", Date.valueOf(LocalDate.of(2001, 2, 3)), 1, content.getImageData(),
+            content.getImageType()),
+        new Joueur("titi", "p2", null, null, 2, null, null),
+        new Joueur("tutu", "p3", "F", Date.valueOf(LocalDate.of(1990, 1, 2)), 3, pasContent.getImageData(),
+            pasContent.getImageType()));
     for (var u : users) {
+      u.saveInDB(con);
+    }
+    List<Joueur> aleas = Joueur.joueursAlea(30,
+        1, "J", "P",
+        0.1,7, 77, 0.45, 0.45,
+        0.50, 0.30, new Random());
+    for (var u : aleas) {
       u.saveInDB(con);
     }
   }

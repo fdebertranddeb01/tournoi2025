@@ -33,13 +33,16 @@ public class SmallImageWithUploader extends CustomField<SmallImage> {
 
   private SmallImageUploader uploader;
   private Div imagePlace;
+  private Div uploaderPlace;
   private int imgWidthInPixel;
   private int imgHeightInPixel;
+  private int maxFileSize;
 
   private SmallImage curImage;
   private SmallImage curImageResized;
 
   public SmallImageWithUploader(int maxFileSize, int imgWidthInPixel, int imgHeightInPixel) {
+    this.maxFileSize = maxFileSize;
     this.imgWidthInPixel = imgWidthInPixel;
     this.imgHeightInPixel = imgHeightInPixel;
     this.imagePlace = new Div();
@@ -58,10 +61,19 @@ public class SmallImageWithUploader extends CustomField<SmallImage> {
           this.changeImage();
         });
     this.imagePlace.add(VaadinIcon.BAN.create());
-    this.add(this.imagePlace, this.uploader);
+    this.uploaderPlace = new Div();
+    this.uploaderPlace.add(this.uploader);
+    this.add(this.imagePlace, this.uploaderPlace);
   }
 
   public void setCurImage(SmallImage img) {
+    this.uploader = new SmallImageUploader(this.maxFileSize);
+    this.uploader.addAllFinishedListener(
+        (t) -> {
+          this.changeImage();
+        });
+    this.uploaderPlace.removeAll();
+    this.uploaderPlace.add(this.uploader);
     this.curImage = img;
     if (img != null) {
       try {

@@ -16,19 +16,23 @@ import fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur.JoueurFormWithBinder;
 public class TestJoueurFormWithBinder extends VerticalLayout {
 
     public TestJoueurFormWithBinder() {
-        JoueurFormWithBinder form = new JoueurFormWithBinder(Joueur.nouveauJoueur());
+        JoueurFormWithBinder form = new JoueurFormWithBinder(Joueur.nouveauJoueur(), false);
+        form.getStyle().set("border", "1px solid black");
+        form.getStyle().set("margin-bottom", "20px");
         this.add(form);
         try (Connection conn = ConnectionPool.getConnection()) {
             Optional<Joueur> optJoueur = Joueur.getBySurnom(conn, "toto");
             if (!optJoueur.isEmpty()) {
-                JoueurFormWithBinder form2 = new JoueurFormWithBinder(optJoueur.get());
+                JoueurFormWithBinder form2 = new JoueurFormWithBinder(optJoueur.get(), true);
+                form2.getStyle().set("border", "1px solid black");
                 this.add(form2);
+
             } else {
                 this.add(new H3("Joueur 'toto' non trouvé"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-     }
+    }
 
 }

@@ -25,6 +25,7 @@ import fr.insa.beuvron.vaadin.projets.tournoi.webui.admin.EditGeneralParams;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.admin.RAZBdDPannel;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur.InscriptionJoueur;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur.JoueurBrowser;
+import fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur.JoueurBrowserWithBinder;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.joueur.ListeJoueur;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.tests.TestIntegerTextField;
 import fr.insa.beuvron.vaadin.projets.tournoi.webui.tests.TestJoueurFormWithBinder;
@@ -45,8 +46,9 @@ public class MainMenu extends SideNav {
     SideNavItem admin = new SideNavItem("admin");
     SideNavItem editParams = new SideNavItem("edit params", EditGeneralParams.class);
     SideNavItem browseJoueurs = new SideNavItem("browse joueurs", JoueurBrowser.class);
+    SideNavItem browseJoueursV2 = new SideNavItem("browse joueurs V2", JoueurBrowserWithBinder.class);
     SideNavItem razBdd = new SideNavItem("RAZ BDD", RAZBdDPannel.class);
-    admin.addItem(editParams, browseJoueurs, razBdd);
+    admin.addItem(editParams, browseJoueurs,browseJoueursV2, razBdd);
     SideNavItem tests = new SideNavItem("tests");
     SideNavItem testForm = new SideNavItem("joueur form binder", TestJoueurFormWithBinder.class);
     SideNavItem testupload = new SideNavItem("upload image", TestSmallImageLoader.class);
